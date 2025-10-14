@@ -1,0 +1,23 @@
+{
+  "microsoft": {
+    "client_id": "YOUR_CLIENT_ID_HERE",
+    "client_secret": "YOUR_CLIENT_SECRET_HERE",
+    "redirect_uri": "http://localhost:8000/callback",
+    "scopes": [
+      "Notes.Create",
+      "Notes.Read",
+      "Files.ReadWrite"
+    ]
+  },
+  "onenote": {
+    "default_notebook_id": null,
+    "default_section_id": null
+  },
+  "onedrive": {
+    "default_folder": "/LifeLog"
+  },
+  "categories": {
+    "enabled": false,
+    "rules": []
+  }
+}
