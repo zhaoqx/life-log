@@ -6,14 +6,25 @@
 
 Life Log 是一个复合型项目，包含多个逐步规划和完善的子项目。本项目统一在 `docs/` 目录下进行文档管理，分版本记录修改说明、用户故事、需求书、概要设计等文档。
 
-## v1.0 功能特性
+## 当前版本: v1.1.0
 
-v1.0 版本实现了手机信息采集到 OneNote 和 OneDrive 的基础功能：
+### v1.1 功能特性
+
+v1.1 版本在 v1.0 基础上增强了 iOS 平台支持：
 
 - ✅ **OneNote 文章同步**: 将文本内容同步到 OneNote 笔记本
 - ✅ **OneDrive 文件上传**: 上传文件和照片到 OneDrive
 - ✅ **Microsoft 认证**: 使用 OAuth 2.0 安全认证
 - ✅ **配置系统**: 灵活的配置管理，支持未来扩展（分类、目录映射等）
+- 🆕 **iOS Pythonista 支持**: 完整的 Pythonista 集成方案和脚本
+- 🆕 **iOS 快捷指令集成**: 通过 Siri 创建笔记的完整指南
+- 🆕 **Flask API 封装**: 为移动端提供的轻量级 API 服务
+- 🆕 **增强的移动端文档**: 详细的 iOS 使用指南和最佳实践
+
+### 版本历史
+
+- **v1.1.0** (2025-10-14): iOS 平台增强，详见 [v1.1 CHANGELOG](docs/v1.1/CHANGELOG.md)
+- **v1.0.0** (2025-10-14): 初始版本，基础功能实现，详见 [v1.0 CHANGELOG](docs/v1.0/CHANGELOG.md)
 
 ## 快速开始
 
@@ -126,16 +137,53 @@ python cli.py config show
 python cli.py config init
 ```
 
+## iOS 移动端使用
+
+v1.1 版本提供了完整的 iOS 平台支持方案：
+
+### 方案一: Pythonista
+
+在 iOS 上使用 Pythonista 应用直接运行脚本：
+
+```python
+# 使用提供的快速笔记脚本
+python quick_note.py "我的标题" "我的内容"
+```
+
+### 方案二: iOS 快捷指令 + 服务器 API
+
+1. 在服务器上运行 Flask API：
+   ```bash
+   python ios_api.py
+   ```
+
+2. 在 iOS 快捷指令中配置 API 调用
+
+3. 通过 Siri 语音创建笔记
+
+### 方案三: SSH 远程访问
+
+使用 iOS SSH 客户端（如 Terminus）连接服务器使用完整功能。
+
+**详细说明**: 查看 [手机使用指南](docs/MOBILE_GUIDE.md)
+
 ## 项目结构
 
 ```
 life-log/
 ├── docs/                    # 文档目录
-│   └── v1.0/               # v1.0 版本文档
-│       ├── CHANGELOG.md    # 变更日志
-│       ├── USER_STORIES.md # 用户故事
-│       ├── REQUIREMENTS.md # 需求规格说明
-│       └── DESIGN.md       # 概要设计说明
+│   ├── v1.1/               # v1.1 版本文档
+│   │   ├── CHANGELOG.md    # v1.1 变更日志
+│   │   ├── USER_STORIES.md # v1.1 用户故事
+│   │   ├── REQUIREMENTS.md # v1.1 需求规格
+│   │   └── DESIGN.md       # v1.1 设计文档
+│   ├── v1.0/               # v1.0 版本文档
+│   │   ├── CHANGELOG.md    # v1.0 变更日志
+│   │   ├── USER_STORIES.md # v1.0 用户故事
+│   │   ├── REQUIREMENTS.md # v1.0 需求规格
+│   │   └── DESIGN.md       # v1.0 设计文档
+│   ├── MOBILE_GUIDE.md     # 手机使用指南
+│   └── DEVELOPMENT.md      # 开发指南
 ├── mobile_collector/        # 主程序包
 │   ├── __init__.py
 │   ├── auth.py             # 认证模块
@@ -143,6 +191,8 @@ life-log/
 │   ├── onenote_service.py  # OneNote 服务
 │   └── onedrive_service.py # OneDrive 服务
 ├── cli.py                  # 命令行接口
+├── ios_api.py              # iOS 快捷指令 API (v1.1 新增)
+├── quick_note.py           # Pythonista 快速笔记脚本 (v1.1 新增)
 ├── config.example.json     # 配置文件模板
 ├── .env.example            # 环境变量模板
 ├── requirements.txt        # 依赖列表
