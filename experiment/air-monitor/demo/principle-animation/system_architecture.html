@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统架构动画演示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2rem;
+        }
+        
+        .architecture {
+            position: relative;
+            padding: 40px 0;
+        }
+        
+        .layer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            margin: 20px auto;
+            border-radius: 15px;
+            max-width: 800px;
+            position: relative;
+            animation: fadeInUp 1s ease-out;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        .layer h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .layer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .module {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            animation: pulse 2s infinite;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .arrow {
+            text-align: center;
+            font-size: 3rem;
+            color: #667eea;
+            animation: bounce 2s infinite;
+            margin: 10px 0;
+        }
+        
+        .data-flow {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: dataFlow 3s infinite;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        @keyframes dataFlow {
+            0% {
+                top: 0;
+                opacity: 1;
+            }
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+        
+        .sensor-layer {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            animation-delay: 0.2s;
+        }
+        
+        .control-layer {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            animation-delay: 0.4s;
+        }
+        
+        .backend-layer {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            animation-delay: 0.6s;
+        }
+        
+        .frontend-layer {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            animation-delay: 0.8s;
+        }
+        
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 5px;
+        }
+        
+        .info-box h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .info-box ul {
+            list-style-position: inside;
+            color: #555;
+        }
+        
+        .info-box li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏠 厨房空气质量监测系统 - 架构演示</h1>
+        
+        <div class="architecture">
+            <!-- 传感器层 -->
+            <div class="layer sensor-layer">
+                <h2>📡 传感器层 (Sensor Layer)</h2>
+                <div class="layer-content">
+                    <div class="module">
+                        <strong>PM2.5传感器</strong>
+                        <p style="font-size:0.9rem;">颗粒物检测</p>
+                    </div>
+                    <div class="module">
+                        <strong>CO传感器</strong>
+                        <p style="font-size:0.9rem;">一氧化碳检测</p>
+                    </div>
+                    <div class="module">
+                        <strong>CO2传感器</strong>
+                        <p style="font-size:0.9rem;">二氧化碳检测</p>
+                    </div>
+                    <div class="module">
+                        <strong>温湿度传感器</strong>
+                        <p style="font-size:0.9rem;">温度湿度检测</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            <div class="data-flow" style="animation-delay: 0s;"></div>
+            
+            <!-- 数据采集层 -->
+            <div class="layer control-layer">
+                <h2>🎛️ 数据采集层 (Data Collection)</h2>
+                <div class="layer-content">
+                    <div class="module">
+                        <strong>Arduino/树莓派</strong>
+                        <p style="font-size:0.9rem;">硬件控制</p>
+                    </div>
+                    <div class="module">
+                        <strong>数据预处理</strong>
+                        <p style="font-size:0.9rem;">滤波与校准</p>
+                    </div>
+                    <div class="module">
+                        <strong>串口通信</strong>
+                        <p style="font-size:0.9rem;">数据传输</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            <div class="data-flow" style="animation-delay: 1s;"></div>
+            
+            <!-- 后端处理层 -->
+            <div class="layer backend-layer">
+                <h2>⚙️ 后端处理层 (Backend)</h2>
+                <div class="layer-content">
+                    <div class="module">
+                        <strong>数据存储</strong>
+                        <p style="font-size:0.9rem;">SQLite/MySQL</p>
+                    </div>
+                    <div class="module">
+                        <strong>异常检测</strong>
+                        <p style="font-size:0.9rem;">阈值判断</p>
+                    </div>
+                    <div class="module">
+                        <strong>告警系统</strong>
+                        <p style="font-size:0.9rem;">多种告警方式</p>
+                    </div>
+                    <div class="module">
+                        <strong>API服务</strong>
+                        <p style="font-size:0.9rem;">RESTful接口</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            <div class="data-flow" style="animation-delay: 2s;"></div>
+            
+            <!-- 前端展示层 -->
+            <div class="layer frontend-layer">
+                <h2>🖥️ 前端展示层 (Frontend)</h2>
+                <div class="layer-content">
+                    <div class="module">
+                        <strong>实时监控</strong>
+                        <p style="font-size:0.9rem;">当前数据显示</p>
+                    </div>
+                    <div class="module">
+                        <strong>历史数据</strong>
+                        <p style="font-size:0.9rem;">趋势图表</p>
+                    </div>
+                    <div class="module">
+                        <strong>告警记录</strong>
+                        <p style="font-size:0.9rem;">异常事件</p>
+                    </div>
+                    <div class="module">
+                        <strong>数据分析</strong>
+                        <p style="font-size:0.9rem;">统计报表</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 系统特点 -->
+        <div class="info-box">
+            <h3>🌟 系统特点</h3>
+            <ul>
+                <li><strong>实时监测</strong>：每秒采集一次数据，实时掌握空气质量</li>
+                <li><strong>多维度指标</strong>：PM2.5、CO、CO2、温度、湿度全方位监测</li>
+                <li><strong>智能告警</strong>：基于阈值的多级告警机制（正常、警告、危险）</li>
+                <li><strong>数据可视化</strong>：直观的图表展示，清晰了解历史趋势</li>
+                <li><strong>模块化设计</strong>：易于扩展和维护</li>
+            </ul>
+        </div>
+        
+        <!-- 数据流程说明 -->
+        <div class="info-box" style="margin-top: 20px;">
+            <h3>🔄 数据流程</h3>
+            <ul>
+                <li><strong>Step 1</strong>：传感器实时采集空气质量数据</li>
+                <li><strong>Step 2</strong>：微控制器读取并预处理数据</li>
+                <li><strong>Step 3</strong>：通过串口/网络发送至后端服务器</li>
+                <li><strong>Step 4</strong>：后端进行异常检测和数据存储</li>
+                <li><strong>Step 5</strong>：触发告警（如果检测到异常）</li>
+                <li><strong>Step 6</strong>：前端实时展示和历史数据分析</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // 添加更多数据流动画点
+        const architecture = document.querySelector('.architecture');
+        setInterval(() => {
+            const dataPoint = document.createElement('div');
+            dataPoint.className = 'data-flow';
+            dataPoint.style.animationDelay = Math.random() + 's';
+            dataPoint.style.left = (45 + Math.random() * 10) + '%';
+            architecture.appendChild(dataPoint);
+            
+            // 3秒后移除
+            setTimeout(() => {
+                dataPoint.remove();
+            }, 3000);
+        }, 1000);
+    </script>
+</body>
+</html>

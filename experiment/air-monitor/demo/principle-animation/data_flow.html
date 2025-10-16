@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据流程动画演示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            background: #1a1a2e;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .flow-diagram {
+            position: relative;
+            min-height: 600px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .step {
+            position: relative;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 600px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            animation: slideIn 0.8s ease-out backwards;
+        }
+        
+        .step:nth-child(1) { animation-delay: 0.2s; }
+        .step:nth-child(2) { animation-delay: 0.6s; }
+        .step:nth-child(3) { animation-delay: 1.0s; }
+        .step:nth-child(4) { animation-delay: 1.4s; }
+        .step:nth-child(5) { animation-delay: 1.8s; }
+        .step:nth-child(6) { animation-delay: 2.2s; }
+        
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #ffd700;
+            color: #1a1a2e;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.5);
+        }
+        
+        .step h3 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .step-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .step-icon {
+            font-size: 3rem;
+            animation: rotate 3s linear infinite;
+        }
+        
+        .step-details {
+            flex: 1;
+        }
+        
+        .data-packet {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            margin: 5px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .connector {
+            text-align: center;
+            font-size: 3rem;
+            color: #667eea;
+            animation: bounce 1.5s infinite;
+            margin: 20px 0;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .timeline {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            z-index: -1;
+        }
+        
+        .status-bar {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .status-item {
+            display: inline-block;
+            margin: 10px 20px;
+        }
+        
+        .status-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4ade80;
+        }
+        
+        .alert-indicator {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-left: 10px;
+            animation: blink 1s infinite;
+        }
+        
+        .alert-normal { background: #4ade80; }
+        .alert-warning { background: #fbbf24; }
+        .alert-danger { background: #ef4444; }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 数据流程实时演示</h1>
+        
+        <div class="flow-diagram">
+            <div class="timeline"></div>
+            
+            <!-- Step 1: 传感器采集 -->
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>🔍 传感器数据采集</h3>
+                <div class="step-content">
+                    <div class="step-icon">📡</div>
+                    <div class="step-details">
+                        <p><strong>采集频率：</strong>每秒1次</p>
+                        <div>
+                            <span class="data-packet">PM2.5: <span id="pm25-raw">0</span> μg/m³</span>
+                            <span class="data-packet">CO: <span id="co-raw">0</span> ppm</span>
+                            <span class="data-packet">CO2: <span id="co2-raw">0</span> ppm</span>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+                            传感器持续监测厨房空气中的各项指标
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="connector">↓</div>
+            
+            <!-- Step 2: 数据预处理 -->
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>⚡ 数据预处理</h3>
+                <div class="step-content">
+                    <div class="step-icon">🔧</div>
+                    <div class="step-details">
+                        <p><strong>处理步骤：</strong>滤波 → 校准 → 平滑</p>
+                        <div>
+                            <span class="data-packet">滤波算法: 移动平均</span>
+                            <span class="data-packet">噪声抑制: ±5%</span>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+                            去除噪声和异常值，确保数据准确性
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="connector">↓</div>
+            
+            <!-- Step 3: 异常检测 -->
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>🎯 异常检测</h3>
+                <div class="step-content">
+                    <div class="step-icon">🔍</div>
+                    <div class="step-details">
+                        <p><strong>检测模式：</strong>实时阈值判断</p>
+                        <div>
+                            <span class="data-packet">正常 < 警戒 < 危险</span>
+                            <span class="data-packet">当前状态: <span id="current-status">正常</span></span>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+                            对比预设阈值，识别潜在的空气质量问题
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="connector">↓</div>
+            
+            <!-- Step 4: 数据存储 -->
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>💾 数据存储</h3>
+                <div class="step-content">
+                    <div class="step-icon">🗄️</div>
+                    <div class="step-details">
+                        <p><strong>存储策略：</strong>每分钟记录平均值</p>
+                        <div>
+                            <span class="data-packet">数据库: SQLite</span>
+                            <span class="data-packet">记录数: <span id="record-count">0</span></span>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+                            持久化存储，支持长期数据分析
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="connector">↓</div>
+            
+            <!-- Step 5: 告警处理 -->
+            <div class="step">
+                <div class="step-number">5</div>
+                <h3>⚠️ 告警处理</h3>
+                <div class="step-content">
+                    <div class="step-icon">🔔</div>
+                    <div class="step-details">
+                        <p><strong>告警方式：</strong>声光 + 推送 + 邮件</p>
+                        <div>
+                            <span class="data-packet">蜂鸣器</span>
+                            <span class="data-packet">LED指示</span>
+                            <span class="data-packet">手机推送</span>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+                            多渠道告警，确保及时发现异常
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="connector">↓</div>
+            
+            <!-- Step 6: 前端展示 -->
+            <div class="step">
+                <div class="step-number">6</div>
+                <h3>🖥️ 可视化展示</h3>
+                <div class="step-content">
+                    <div class="step-icon">📈</div>
+                    <div class="step-details">
+                        <p><strong>展示内容：</strong>实时数据 + 历史趋势</p>
+                        <div>
+                            <span class="data-packet">实时仪表盘</span>
+                            <span class="data-packet">趋势图表</span>
+                            <span class="data-packet">统计分析</span>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+                            直观展示，便于理解和决策
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 实时状态栏 -->
+        <div class="status-bar">
+            <h3 style="margin-bottom: 20px;">📊 实时状态监控</h3>
+            <div class="status-item">
+                <div>PM2.5</div>
+                <div class="status-value"><span id="pm25-display">15.0</span> μg/m³</div>
+            </div>
+            <div class="status-item">
+                <div>一氧化碳</div>
+                <div class="status-value"><span id="co-display">3.0</span> ppm</div>
+            </div>
+            <div class="status-item">
+                <div>二氧化碳</div>
+                <div class="status-value"><span id="co2-display">450</span> ppm</div>
+            </div>
+            <div class="status-item">
+                <div>系统状态</div>
+                <div class="status-value">
+                    运行中 <span class="alert-indicator alert-normal" id="status-light"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 模拟数据更新
+        let pm25 = 15.0;
+        let co = 3.0;
+        let co2 = 450;
+        let recordCount = 0;
+        
+        // 模拟烹饪场景
+        let isCoO king = false;
+        
+        function updateData() {
+            // 模拟数据波动
+            if (Math.random() < 0.02) { // 2%概率开始烹饪
+                isCooking = !isCooking;
+            }
+            
+            if (isCooking) {
+                pm25 = Math.min(pm25 + Math.random() * 10, 120);
+                co = Math.min(co + Math.random() * 5, 40);
+                co2 = Math.min(co2 + Math.random() * 50, 2500);
+            } else {
+                pm25 = Math.max(pm25 - Math.random() * 5, 15);
+                co = Math.max(co - Math.random() * 2, 3);
+                co2 = Math.max(co2 - Math.random() * 30, 450);
+            }
+            
+            // 更新显示
+            document.getElementById('pm25-raw').textContent = pm25.toFixed(1);
+            document.getElementById('co-raw').textContent = co.toFixed(1);
+            document.getElementById('co2-raw').textContent = co2.toFixed(0);
+            
+            document.getElementById('pm25-display').textContent = pm25.toFixed(1);
+            document.getElementById('co-display').textContent = co.toFixed(1);
+            document.getElementById('co2-display').textContent = co2.toFixed(0);
+            
+            // 更新状态
+            let status = '正常';
+            let statusClass = 'alert-normal';
+            
+            if (pm25 > 150 || co > 100 || co2 > 5000) {
+                status = '危险';
+                statusClass = 'alert-danger';
+            } else if (pm25 > 75 || co > 35 || co2 > 2000) {
+                status = '警告';
+                statusClass = 'alert-warning';
+            }
+            
+            document.getElementById('current-status').textContent = status;
+            const statusLight = document.getElementById('status-light');
+            statusLight.className = 'alert-indicator ' + statusClass;
+            
+            // 更新记录数
+            if (Math.random() < 0.1) { // 10%概率增加记录
+                recordCount++;
+                document.getElementById('record-count').textContent = recordCount;
+            }
+        }
+        
+        // 每2秒更新一次数据
+        setInterval(updateData, 2000);
+        updateData();
+    </script>
+</body>
+</html>
