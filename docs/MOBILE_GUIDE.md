@@ -71,23 +71,72 @@ upload photo1.jpg photo2.jpg --folder /Photos
 
 ## 方案二：Pythonista（iOS）
 
+Pythonista 是 iOS 上的专业 Python 开发环境，非常适合运行 Life Log。
+
 ### 安装步骤
 
-1. 从 App Store 安装 Pythonista
-2. 在 Pythonista 中：
-   - 创建新文件夹 `life-log`
-   - 将项目文件复制到该文件夹
+1. **安装 Pythonista**
+   - 从 App Store 下载安装 Pythonista 3
+   - 注意: Pythonista 是付费应用
 
-3. 安装依赖库（在 Pythonista 控制台）：
-```python
-import requests
-import json
-# MSAL 可能需要手动下载
-```
+2. **获取 Life Log**
+   - 方法一: 使用 Pythonista 的 Git 客户端克隆仓库
+   - 方法二: 从电脑通过 iCloud 或 iTunes 文件共享传输文件
+   - 方法三: 使用 Pythonista 的 WebDAV 功能
+
+3. **安装依赖库**
+   
+   在 Pythonista 控制台中执行：
+   ```python
+   import requests  # Pythonista 自带
+   
+   # 安装 msal（需要手动）
+   # 1. 从 PyPI 下载 msal 包
+   # 2. 解压到 site-packages 目录
+   # 或使用 StaSh（Pythonista shell）
+   import requests
+   import zipfile
+   import os
+   
+   # 下载并安装 msal
+   # 注意: 这是简化示例，实际可能需要处理依赖
+   ```
+
+4. **配置文件**
+   
+   创建 `config.json`：
+   ```json
+   {
+     "microsoft": {
+       "client_id": "你的应用ID",
+       "client_secret": "你的应用密钥",
+       "redirect_uri": "http://localhost:8000/callback",
+       "scopes": [
+         "Notes.Create",
+         "Notes.Read",
+         "Files.ReadWrite"
+       ]
+     }
+   }
+   ```
 
 ### 使用方法
 
-创建快捷脚本 `quick_note.py`：
+**快速开始 - 使用提供的脚本**
+
+项目包含预制的 `quick_note.py` 脚本，可直接使用：
+
+```python
+# 在 Pythonista 中运行
+python quick_note.py "我的标题" "我的内容"
+
+# 或从文件读取
+python quick_note.py "会议记录" --file notes.txt
+```
+
+**自定义脚本示例**
+
+创建自己的快捷脚本：
 
 ```python
 import sys
@@ -112,6 +161,77 @@ if __name__ == '__main__':
     else:
         print("用法: python quick_note.py '标题' '内容'")
 ```
+
+**上传照片示例**
+
+```python
+import photos
+from mobile_collector import Config, MicrosoftAuthenticator, OneDriveService
+
+def upload_photo():
+    # 从相册选择照片
+    img = photos.pick_image()
+    if img is None:
+        print("未选择照片")
+        return
+    
+    # 保存临时文件
+    import tempfile
+    import os
+    tmp_path = os.path.join(tempfile.gettempdir(), 'photo.jpg')
+    img.save(tmp_path)
+    
+    # 上传到 OneDrive
+    config = Config()
+    auth = MicrosoftAuthenticator(
+        client_id=config.get('microsoft.client_id'),
+        client_secret=config.get('microsoft.client_secret'),
+        redirect_uri=config.get('microsoft.redirect_uri'),
+        scopes=config.get('microsoft.scopes')
+    )
+    
+    service = OneDriveService(auth)
+    result = service.upload_file(tmp_path, '/Photos')
+    
+    print(f"照片已上传: {result['webUrl']}")
+    
+    # 清理临时文件
+    os.unlink(tmp_path)
+
+if __name__ == '__main__':
+    upload_photo()
+```
+
+### Pythonista 小技巧
+
+1. **添加到主屏幕**
+   - 在 Pythonista 中长按脚本
+   - 选择 "分享" > "添加到主屏幕"
+   - 可以直接从主屏幕运行脚本
+
+2. **使用小组件**
+   - Pythonista 支持 iOS 小组件
+   - 可以创建快捷笔记小组件
+
+3. **整合 iOS 分享表单**
+   - 使用 Pythonista 的 Share Extension
+   - 可以从其他应用分享内容到 Life Log
+
+### 常见问题
+
+**Q: 如何处理认证？**
+
+A: Pythonista 环境下认证稍复杂，建议：
+1. 在电脑上先完成认证
+2. 将生成的 `.auth_cache.json` 复制到 iOS 设备
+3. 或使用设备码流程（需要额外配置）
+
+**Q: MSAL 依赖安装困难？**
+
+A: 可以考虑：
+1. 使用 StaSh (Pythonista shell) 安装
+2. 手动下载 wheel 文件并解压
+3. 或使用远程服务器方案（方案三/四）
 
 ## 方案三：远程服务器（所有平台）
 
@@ -138,29 +258,224 @@ python cli.py note create "远程笔记" --content "内容..."
 
 ## 方案四：快捷指令（iOS）+ 服务器
 
+这是最适合日常使用的 iOS 方案，可以通过 Siri 语音创建笔记。
+
 ### 设置步骤
 
-1. 在服务器上部署 Life Log
-2. 创建简单的 Web API 封装
-3. 使用 iOS 快捷指令调用 API
+#### 1. 服务器端部署
 
-### 示例 Web API（Flask）
+在服务器上部署 Life Log API：
+
+```bash
+# 克隆项目
+git clone https://github.com/zhaoqx/life-log.git
+cd life-log
+
+# 安装依赖
+pip install -r requirements.txt
+pip install flask
+
+# 配置
+cp config.example.json config.json
+# 编辑 config.json 填入 Microsoft 凭据
+
+# 首次认证
+python cli.py auth
+
+# 运行 API 服务
+python ios_api.py
+```
+
+**生产环境部署（推荐）**：
+
+```bash
+# 安装 gunicorn
+pip install gunicorn
+
+# 使用 gunicorn 运行
+gunicorn -w 4 -b 0.0.0.0:5000 ios_api:app
+
+# 或使用 systemd 服务
+sudo nano /etc/systemd/system/lifelog-api.service
+```
+
+示例 systemd 配置：
+```ini
+[Unit]
+Description=Life Log iOS API
+After=network.target
+
+[Service]
+Type=simple
+User=your-user
+WorkingDirectory=/path/to/life-log
+Environment="API_TOKEN=your-secret-token"
+ExecStart=/usr/bin/gunicorn -w 4 -b 0.0.0.0:5000 ios_api:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+启动服务：
+```bash
+sudo systemctl enable lifelog-api
+sudo systemctl start lifelog-api
+```
+
+#### 2. 配置 HTTPS（重要）
+
+使用 Nginx 和 Let's Encrypt：
+
+```bash
+# 安装 Nginx
+sudo apt install nginx certbot python3-certbot-nginx
+
+# 配置 Nginx
+sudo nano /etc/nginx/sites-available/lifelog
+```
+
+Nginx 配置示例：
+```nginx
+server {
+    listen 80;
+    server_name your-domain.com;
+    
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+获取 SSL 证书：
+```bash
+sudo certbot --nginx -d your-domain.com
+```
+
+#### 3. 设置 API Token（安全）
+
+```bash
+# 设置环境变量
+export API_TOKEN="your-secret-token-here"
+
+# 或在 systemd 服务中配置
+```
+
+### iOS 快捷指令配置
+
+#### 创建"快速笔记"快捷指令
+
+1. **打开快捷指令 app**
+
+2. **创建新快捷指令**，添加以下操作：
+
+   **操作 1: 听写文本**
+   - 添加 "听写文本" 操作
+   - 语言: 中文（或你的语言）
+   - 将结果存为变量 "笔记内容"
+
+   **操作 2: 询问输入**（可选标题）
+   - 添加 "询问输入" 操作
+   - 提示: "笔记标题（可选）"
+   - 默认答案: "快速笔记"
+   - 将结果存为变量 "笔记标题"
+
+   **操作 3: 获取 URL 内容**
+   - 添加 "获取 URL 内容" 操作
+   - URL: `https://your-domain.com/api/note`
+   - 方法: `POST`
+   - 请求头:
+     - `Authorization`: `Bearer your-secret-token`
+     - `Content-Type`: `application/json`
+   - 请求体: `JSON`
+     ```json
+     {
+       "title": "笔记标题",
+       "content": "笔记内容"
+     }
+     ```
+
+   **操作 4: 从输入获取字典值**
+   - 键: `url`
+   - 获取 OneNote 链接
+
+   **操作 5: 显示通知**
+   - 标题: "笔记创建成功"
+   - 正文: "已保存到 OneNote"
+
+   **操作 6: 打开 URL**（可选）
+   - 打开上一步获取的 URL
+
+3. **配置 Siri**
+   - 为快捷指令添加 Siri 短语
+   - 例如: "创建笔记"、"记录想法"
+
+4. **添加到主屏幕**
+   - 在快捷指令详情中
+   - 选择 "添加到主屏幕"
+   - 设置图标和名称
+
+### 高级快捷指令示例
+
+#### 语音笔记
+```
+1. 听写文本 → 笔记内容
+2. 获取当前日期 → 格式化为 "YYYY-MM-DD HH:mm"
+3. 设置变量: 标题 = "语音笔记 - {日期}"
+4. 调用 API
+5. 显示通知
+```
+
+#### 分享扩展
+```
+1. 接收输入（从分享菜单）
+2. 获取分享的 URL 或文本
+3. 询问笔记标题
+4. 调用 API 保存
+5. 显示通知
+```
+
+#### 定时笔记
+```
+1. 设置自动化: 每天晚上 10 点
+2. 询问今日总结
+3. 调用 API 保存
+4. 发送完成通知
+```
+
+### 示例 Web API（完整版）
+
+项目包含完整的 `ios_api.py` 文件，提供：
 
 ```python
-from flask import Flask, request
-from mobile_collector import Config, MicrosoftAuthenticator, OneNoteService
+# 主要端点
+GET  /           # 健康检查
+POST /api/note   # 创建笔记
+POST /api/upload # 上传文件
 
-app = Flask(__name__)
-
-@app.route('/api/note', methods=['POST'])
-def create_note():
-    data = request.json
-    # 创建笔记逻辑
-    return {'status': 'success'}
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+# 使用示例
+curl -X POST https://your-domain.com/api/note \
+  -H "Authorization: Bearer your-token" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "测试", "content": "内容"}'
 ```
+
+### 故障排除
+
+**问题: 快捷指令调用失败**
+- 检查服务器是否运行
+- 验证 URL 和 token 正确
+- 查看服务器日志
+
+**问题: 认证错误**
+- 确认 API_TOKEN 配置正确
+- 检查请求头格式
+
+**问题: HTTPS 证书问题**
+- 确认证书有效
+- 使用 Let's Encrypt 自动续期
 
 ## 常见问题
 
