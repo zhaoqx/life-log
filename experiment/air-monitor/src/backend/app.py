@@ -211,6 +211,79 @@ def get_thresholds():
     })
 
 
+@app.route('/api/ingest/iotcloud', methods=['POST'])
+def ingest_from_arduino_iot_cloud():
+    """接收来自 Arduino IoT Cloud Webhook 的数据
+
+    预期 JSON 结构（示例）：
+    {
+      "pm25": 35.2,
+      "co": 4.1,
+      "co2": 620,
+      "temperature": 25.3,
+      "humidity": 58.7,
+      "activity": "frying",   # 可选
+      "timestamp": "2025-10-17T12:34:56"  # 可选
+    }
+
+    若缺少 timestamp，将自动补上当前时间。
+    """
+
+    try:
+        payload = request.get_json(force=True, silent=False)
+    except Exception:
+        return jsonify({
+            'success': False,
+            'message': 'Invalid JSON payload'
+        }), 400
+
+    required_keys = ['pm25', 'co', 'co2', 'temperature', 'humidity']
+    missing = [k for k in required_keys if k not in payload]
+    if missing:
+        return jsonify({
+            'success': False,
+            'message': f'Missing fields: {", ".join(missing)}'
+        }), 400
+
+    # 统一记录结构
+    record = {
+        'timestamp': payload.get('timestamp') or datetime.now().isoformat(),
+        'pm25': float(payload['pm25']),
+        'pm10': float(payload.get('pm10', 0.0)),  # 可选
+        'co': float(payload['co']),
+        'co2': float(payload['co2']),
+        'temperature': float(payload['temperature']),
+        'humidity': float(payload['humidity']),
+        'activity': str(payload.get('activity') or 'unknown')
+    }
+
+    # 更新历史与告警
+    data_history.append(record)
+    if len(data_history) > MAX_HISTORY:
+        data_history.pop(0)
+
+    level = simulator.get_air_quality_level(record)
+    should_alert = simulator.should_alert(record)
+    if should_alert:
+        alert_history.append({
+            'timestamp': record['timestamp'],
+            'level': level,
+            'pm25': record['pm25'],
+            'co': record['co'],
+            'co2': record['co2'],
+            'temperature': record['temperature'],
+            'humidity': record['humidity']
+        })
+        if len(alert_history) > MAX_ALERTS:
+            alert_history.pop(0)
+
+    return jsonify({
+        'success': True,
+        'level': level,
+        'alert': should_alert
+    }), 201
+
+
 if __name__ == '__main__':
     print("=" * 80)
     print("厨房空气质量监测系统 - 后端服务")
