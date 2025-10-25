@@ -2,11 +2,27 @@
 
 本指南带你用 Arduino UNO R4 WiFi 和常见的温湿度传感器完成 3 个快速验证：
 
-- 验证 1：板载 LED 与 12×8 LED 矩阵显示 “OK”。
+- 验证 1：板载 LED 与 12×8 LED 矩阵显示 "OK"。
 - 验证 2：连接温湿度传感器（DHT11/22 或 AHT20），在 LED 矩阵滚动显示温度。
 - 验证 3：连接 Wi‑Fi，输出 IP 并在矩阵显示网络状态。
 
 适合完全新手，按步骤复制示例草图（sketch）到 Arduino IDE 上传即可。
+
+## 🎯 推荐实验方案
+
+**✅ 成功方案：PC端Web服务器模式**
+- Arduino作为数据采集端，发送数据到PC
+- PC运行Python Flask Web服务器
+- 手机/PC浏览器访问Web界面查看实时数据
+
+## 📚 相关实验文档
+
+- **[DHT11实验完整指南](DHT11_EXPERIMENT_GUIDE.md)** - 详细的DHT11传感器实验步骤和说明
+- **[DHT11快速开始](DHT11_QUICKSTART.md)** - 5分钟快速上手指南
+- **[DHT11基础实验代码](dht11_experiment.ino)** - 基础LED矩阵显示代码
+- **[DHT11数据发送器](../../src/arduino/dht11_data_sender.ino)** - 发送数据到PC服务器
+- **[Python Web服务器](../../src/python/sensor_web_server.py)** - PC端Web服务器
+- **[完整部署指南](../../DEPLOYMENT_GUIDE.md)** - 系统部署和使用说明
 
 ---
 
