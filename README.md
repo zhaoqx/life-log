@@ -80,7 +80,7 @@ cp .env.example .env
 首次使用需要进行 Microsoft 账户认证：
 
 ```bash
-python cli.py auth
+python -m cli auth
 ```
 
 这将打开浏览器进行认证，完成后认证信息将被安全保存。
@@ -89,52 +89,52 @@ python cli.py auth
 
 ```bash
 # 创建简单笔记
-python cli.py note create "我的笔记标题" --content "笔记内容"
+python -m cli note create "我的笔记标题" --content "笔记内容"
 
 # 从文件创建笔记
-python cli.py note create "今日总结" --file article.txt
+python -m cli note create "今日总结" --file article.txt
 
 # 指定笔记本和分区
-python cli.py note create "会议记录" --content "..." --notebook-id <ID> --section-id <ID>
+python -m cli note create "会议记录" --content "..." --notebook-id <ID> --section-id <ID>
 ```
 
 #### 3. 上传文件到 OneDrive
 
 ```bash
 # 上传单个文件
-python cli.py upload photo.jpg
+python -m cli upload photo.jpg
 
 # 上传多个文件
-python cli.py upload photo1.jpg photo2.jpg document.pdf
+python -m cli upload photo1.jpg photo2.jpg document.pdf
 
 # 指定目标文件夹
-python cli.py upload photo.jpg --folder /Photos/2024
+python -m cli upload photo.jpg --folder /Photos/2024
 ```
 
 #### 4. 查看笔记本和文件
 
 ```bash
 # 列出所有笔记本
-python cli.py note list
+python -m cli note list
 
 # 列出笔记本和分区
-python cli.py note list --sections
+python -m cli note list --sections
 
 # 列出 OneDrive 文件
-python cli.py drive list
+python -m cli drive list
 
 # 列出指定文件夹
-python cli.py drive list --folder /LifeLog
+python -m cli drive list --folder /LifeLog
 ```
 
 #### 5. 配置管理
 
 ```bash
 # 查看当前配置
-python cli.py config show
+python -m cli config show
 
 # 初始化配置文件
-python cli.py config init
+python -m cli config init
 ```
 
 ## iOS 移动端使用
@@ -147,14 +147,14 @@ v1.1 版本提供了完整的 iOS 平台支持方案：
 
 ```python
 # 使用提供的快速笔记脚本
-python quick_note.py "我的标题" "我的内容"
+python scripts/quick_note.py "我的标题" "我的内容"
 ```
 
 ### 方案二: iOS 快捷指令 + 服务器 API
 
 1. 在服务器上运行 Flask API：
    ```bash
-   python ios_api.py
+   python scripts/ios_api.py
    ```
 
 2. 在 iOS 快捷指令中配置 API 调用
@@ -171,6 +171,20 @@ python quick_note.py "我的标题" "我的内容"
 
 ```
 life-log/
+├── cli.py                   # 命令行接口（主入口）
+├── mobile_collector/        # 主程序包
+│   ├── __init__.py
+│   ├── auth.py             # 认证模块
+│   ├── config.py           # 配置管理
+│   ├── onenote_service.py  # OneNote 服务
+│   └── onedrive_service.py # OneDrive 服务
+├── scripts/                 # 脚本目录
+│   ├── ios_api.py          # iOS 快捷指令 API (v1.1 新增)
+│   └── quick_note.py       # Pythonista 快速笔记脚本 (v1.1 新增)
+├── tools/                   # 工具脚本
+│   ├── examples.py         # 使用示例
+│   ├── generate_gantt.py   # 甘特图生成工具
+│   └── verify_installation.py # 安装验证脚本
 ├── docs/                    # 文档目录
 │   ├── v1.1/               # v1.1 版本文档
 │   │   ├── CHANGELOG.md    # v1.1 变更日志
@@ -184,19 +198,11 @@ life-log/
 │   │   └── DESIGN.md       # v1.0 设计文档
 │   ├── MOBILE_GUIDE.md     # 手机使用指南
 │   └── DEVELOPMENT.md      # 开发指南
-├── mobile_collector/        # 主程序包
-│   ├── __init__.py
-│   ├── auth.py             # 认证模块
-│   ├── config.py           # 配置管理
-│   ├── onenote_service.py  # OneNote 服务
-│   └── onedrive_service.py # OneDrive 服务
-├── cli.py                  # 命令行接口
-├── ios_api.py              # iOS 快捷指令 API (v1.1 新增)
-├── quick_note.py           # Pythonista 快速笔记脚本 (v1.1 新增)
+├── experiment/              # 实验项目目录
+│   └── air-monitor/        # 厨房空气监测实验
 ├── config.example.json     # 配置文件模板
-├── .env.example            # 环境变量模板
-├── requirements.txt        # 依赖列表
-└── README.md              # 本文件
+├── requirements.txt         # 依赖列表
+└── README.md               # 本文件
 ```
 
 ## 配置说明
