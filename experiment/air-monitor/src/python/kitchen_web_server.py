@@ -10,12 +10,19 @@ from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 import json
 import time
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import threading
 import sqlite3
 import os
 
-app = Flask(__name__)
+# 基础路径配置
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, 'sensor_data.db')
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+
+LOCAL_TZ = timezone(timedelta(hours=8))
+
+app = Flask(__name__, template_folder=TEMPLATE_DIR)
 CORS(app)  # 允许跨域请求
 
 # 全局变量存储最新数据
@@ -37,7 +44,7 @@ max_history = 1000  # 最多保存1000条记录
 # 数据库初始化
 def init_database():
     """初始化SQLite数据库"""
-    conn = sqlite3.connect('sensor_data.db')
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
     cursor.execute('''
@@ -61,7 +68,7 @@ def init_database():
 # 保存数据到数据库
 def save_to_database(data):
     """保存数据到SQLite数据库"""
-    conn = sqlite3.connect('sensor_data.db')
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
     cursor.execute('''
@@ -82,24 +89,77 @@ def save_to_database(data):
     conn.close()
 
 # 从数据库获取历史数据
-def get_history_from_db(limit=100):
-    """从数据库获取历史数据"""
-    conn = sqlite3.connect('sensor_data.db')
+def convert_to_local_iso(dt_str: str) -> str:
+    """将数据库中的时间字符串转换为北京时间 ISO 格式"""
+    if not dt_str:
+        return None
+
+    value = dt_str.strip()
+    if not value:
+        return None
+
+    try:
+        if value.endswith('Z'):
+            value = value[:-1] + '+00:00'
+        dt = datetime.fromisoformat(value)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+    except ValueError:
+        try:
+            dt = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
+            dt = dt.replace(tzinfo=timezone.utc)
+        except ValueError:
+            return dt_str
+
+    local_dt = dt.astimezone(LOCAL_TZ)
+    return local_dt.isoformat(timespec='seconds')
+
+
+def get_history_from_db(limit=100, start_time_utc=None, end_time_utc=None):
+    """从数据库获取历史数据，并可选按时间范围过滤"""
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
-    cursor.execute('''
+    base_query = '''
         SELECT temperature, humidity, co, air_quality, sound, 
                timestamp, device_id, created_at
         FROM kitchen_sensor_data
-        ORDER BY created_at DESC
-        LIMIT ?
-    ''', (limit,))
-    
-    results = cursor.fetchall()
+    '''
+
+    conditions = []
+    params = []
+
+    if start_time_utc:
+        conditions.append('created_at >= ?')
+        params.append(start_time_utc.strftime('%Y-%m-%d %H:%M:%S'))
+
+    if end_time_utc:
+        conditions.append('created_at <= ?')
+        params.append(end_time_utc.strftime('%Y-%m-%d %H:%M:%S'))
+
+    if conditions:
+        base_query += ' WHERE ' + ' AND '.join(conditions)
+
+    base_query += ' ORDER BY created_at DESC LIMIT ?'
+    params.append(limit)
+
+    cursor.execute(base_query, params)
+    rows = cursor.fetchall()
     conn.close()
     
     history = []
-    for row in results:
+    for row in reversed(rows):
+        created_at_raw = row[7]
+        created_at_local = convert_to_local_iso(created_at_raw)
+
+        local_timestamp_ms = None
+        if created_at_local:
+            try:
+                local_dt = datetime.fromisoformat(created_at_local)
+                local_timestamp_ms = int(local_dt.timestamp() * 1000)
+            except ValueError:
+                pass
+
         history.append({
             'temperature': row[0],
             'humidity': row[1],
@@ -108,7 +168,9 @@ def get_history_from_db(limit=100):
             'sound': row[4],
             'timestamp': row[5],
             'device_id': row[6],
-            'created_at': row[7]
+            'created_at': created_at_raw,
+            'created_at_local': created_at_local,
+            'created_at_local_ms': local_timestamp_ms
         })
     
     return history
@@ -136,7 +198,7 @@ def receive_sensor_data():
         # 更新全局数据
         global latest_data
         latest_data.update(data)
-        latest_data['last_update'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        latest_data['last_update'] = datetime.now(LOCAL_TZ).strftime('%Y-%m-%d %H:%M:%S')
         
         # 添加到历史数据
         data_history.append(data.copy())
@@ -168,7 +230,26 @@ def get_current_data():
 def get_history():
     """获取历史数据"""
     limit = request.args.get('limit', 100, type=int)
-    history = get_history_from_db(limit)
+    range_type = request.args.get('range_type', default=None, type=str)
+    range_value = request.args.get('range_value', default=None, type=int)
+
+    start_time_utc = None
+
+    if range_type and range_value and range_value > 0:
+        range_type = range_type.lower()
+        delta = None
+
+        if range_type in ('minute', 'minutes'):
+            delta = timedelta(minutes=range_value)
+        elif range_type in ('hour', 'hours'):
+            delta = timedelta(hours=range_value)
+        elif range_type in ('day', 'days'):
+            delta = timedelta(days=range_value)
+
+        if delta:
+            start_time_utc = datetime.now(timezone.utc) - delta
+
+    history = get_history_from_db(limit, start_time_utc=start_time_utc)
     return jsonify(history)
 
 @app.route('/api/stats')
@@ -209,7 +290,7 @@ def get_stats():
 # 创建模板目录和文件
 def create_templates():
     """创建HTML模板文件"""
-    os.makedirs('templates', exist_ok=True)
+    os.makedirs(TEMPLATE_DIR, exist_ok=True)
     
     html_content = '''<!DOCTYPE html>
 <html lang="zh-CN">
@@ -885,10 +966,14 @@ def create_templates():
 </body>
 </html>'''
     
-    with open('templates/kitchen_monitor.html', 'w', encoding='utf-8') as f:
-        f.write(html_content)
-    
-    print("HTML模板文件已创建: templates/kitchen_monitor.html")
+    template_path = os.path.join(TEMPLATE_DIR, 'kitchen_monitor.html')
+
+    if not os.path.exists(template_path):
+        with open(template_path, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+        print(f"HTML模板文件已创建: {template_path}")
+    else:
+        print(f"HTML模板文件已存在: {template_path}")
 
 if __name__ == '__main__':
     # 初始化数据库
@@ -907,7 +992,7 @@ if __name__ == '__main__':
     print("  - 声音传感器")
     print("-" * 60)
     print("服务器启动中...")
-    print("Web界面访问地址: http://localhost:5000")
+    print("Web界面访问地址: http://localhost:5001")
     print("API接口:")
     print("  - POST /api/sensor-data (Arduino发送数据)")
     print("  - GET  /api/current-data (获取当前数据)")
@@ -916,4 +1001,4 @@ if __name__ == '__main__':
     print("=" * 60)
     
     # 启动Flask服务器
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)

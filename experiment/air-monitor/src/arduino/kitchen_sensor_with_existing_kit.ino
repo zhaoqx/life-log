@@ -33,7 +33,7 @@
 char ssid[] = "YOUR_WIFI_SSID";           // 修改为你的WiFi名称
 char pass[] = "YOUR_WIFI_PASSWORD";        // 修改为你的WiFi密码
 String serverHost = "192.168.3.4";        // PC服务器IP地址
-int serverPort = 5000;
+int serverPort = 5001;
 
 // ========== 传感器配置 ==========
 // DHT11温湿度传感器（套件中已有）

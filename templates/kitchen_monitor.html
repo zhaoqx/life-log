@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>厨房空气质量监测系统</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
     <style>
         * {
             margin: 0;
@@ -203,33 +202,8 @@
         }
         
         .controls {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
+            text-align: center;
             margin: 30px 0;
-        }
-
-        .controls .history-range {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #f8f9fa;
-            border-radius: 20px;
-            padding: 8px 15px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .controls select {
-            padding: 8px 12px;
-            border-radius: 12px;
-            border: 1px solid #d0d7de;
-            background: white;
-            font-size: 0.95em;
-            color: #333;
-            outline: none;
         }
         
         .btn {
@@ -318,17 +292,6 @@
                 width: 100%;
                 margin: 10px 0;
             }
-            .controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .controls .history-range {
-                width: 100%;
-                justify-content: space-between;
-            }
-            .controls select {
-                width: 100%;
-            }
         }
     </style>
 </head>
@@ -345,14 +308,12 @@
                     <h3>🌡️ 温度</h3>
                     <div class="data-value" id="temperature">--</div>
                     <div class="data-unit">°C</div>
-                    <div class="status-badge" id="temperatureStatus">检测中...</div>
                 </div>
                 
                 <div class="data-card humidity">
                     <h3>💧 湿度</h3>
                     <div class="data-value" id="humidity">--</div>
                     <div class="data-unit">%RH</div>
-                    <div class="status-badge" id="humidityStatus">检测中...</div>
                 </div>
                 
                 <div class="data-card co">
@@ -373,7 +334,6 @@
                     <h3>🔊 声音强度</h3>
                     <div class="data-value" id="sound">--</div>
                     <div class="data-unit">%</div>
-                    <div class="status-badge" id="soundStatus">检测中...</div>
                 </div>
             </div>
             
@@ -394,45 +354,12 @@
                     <span class="status-label">📊 数据记录</span>
                     <span class="status-value" id="dataCount">--</span>
                 </div>
-                <div class="status-item">
-                    <span class="status-label">⏱️ 时间范围</span>
-                    <span class="status-value" id="dataRange">--</span>
-                </div>
             </div>
             
             <div class="controls">
                 <button class="btn" onclick="refreshData()">🔄 手动刷新</button>
                 <button class="btn secondary" onclick="loadHistory()">📈 加载历史</button>
                 <button class="btn" onclick="toggleAutoRefresh()">⏹️ 停止自动刷新</button>
-                <div class="history-range">
-                    <span>时间窗口</span>
-                    <select id="historyTimeRange" onchange="changeHistoryTimeRange(this.value)">
-                        <option value="none" selected>不限制</option>
-                        <option value="minutes:30">最近30分钟</option>
-                        <option value="minutes:60">最近1小时</option>
-                        <option value="hours:6">最近6小时</option>
-                        <option value="hours:12">最近12小时</option>
-                        <option value="days:1">最近1天</option>
-                        <option value="days:2">最近2天</option>
-                        <option value="days:3">最近3天</option>
-                    </select>
-                </div>
-                <div class="history-range">
-                    <span>历史范围</span>
-                    <select id="historyRange" onchange="changeHistoryRange(this.value)">
-                        <option value="100">最近100条</option>
-                        <option value="500" selected>最近500条</option>
-                        <option value="1000">最近1000条</option>
-                        <option value="2000">最近2000条</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="chart-container">
-                <div class="chart-title">📈 多指标相关性趋势</div>
-                <div class="chart-wrapper">
-                    <canvas id="correlationChart"></canvas>
-                </div>
             </div>
             
             <div class="chart-container">
@@ -459,87 +386,9 @@
     </div>
 
     <script>
-        let tempHumChart, gasChart, soundChart, correlationChart;
+        let tempHumChart, gasChart, soundChart;
         let autoRefreshInterval;
-        let historyRefreshInterval;
         let isAutoRefresh = true;
-        let historyLimit = 500;
-        let historyTimeFilter = null;
-
-        function createTimeScaleConfig() {
-            return {
-                type: 'time',
-                time: {
-                    tooltipFormat: 'yyyy-MM-dd HH:mm:ss',
-                    displayFormats: {
-                        second: 'HH:mm:ss',
-                        minute: 'HH:mm',
-                        hour: 'MM-dd HH:mm',
-                        day: 'MM-dd'
-                    }
-                },
-                adapters: {
-                    date: {
-                        zone: 'UTC'
-                    }
-                },
-                ticks: {
-                    autoSkip: true,
-                    maxRotation: 45,
-                    maxTicksLimit: 15
-                },
-                title: {
-                    display: true,
-                    text: '北京时间'
-                }
-            };
-        }
-
-        function toNumber(value) {
-            const number = Number(value);
-            return Number.isFinite(number) ? number : 0;
-        }
-
-        function parseTimestamp(item) {
-            if (item.created_at_local_ms) {
-                const date = new Date(item.created_at_local_ms);
-                if (!Number.isNaN(date.getTime())) {
-                    return date;
-                }
-            }
-
-            const source = item.created_at_local || item.created_at;
-
-            if (source) {
-                let value = source;
-                if (typeof value === 'string') {
-                    if (value.endsWith('Z')) {
-                        value = value.slice(0, -1) + '+00:00';
-                    }
-                    if (!value.includes('T')) {
-                        value = value.replace(' ', 'T');
-                    }
-                }
-
-                const date = new Date(value);
-                if (!Number.isNaN(date.getTime())) {
-                    return date;
-                }
-            }
-
-            if (item.timestamp) {
-                const ts = Number(item.timestamp);
-                if (Number.isFinite(ts)) {
-                    return new Date(ts * 1000);
-                }
-            }
-
-            return new Date();
-        }
-
-        function formatDateTime(date) {
-            return date.toLocaleString('zh-CN', { hour12: false });
-        }
         
         // 初始化图表
         function initCharts() {
@@ -565,15 +414,9 @@
                     }]
                 },
                 options: {
-                    parsing: false,
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
                     scales: {
-                        x: createTimeScaleConfig(),
                         y: {
                             type: 'linear',
                             display: true,
@@ -613,15 +456,9 @@
                     }]
                 },
                 options: {
-                    parsing: false,
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
                     scales: {
-                        x: createTimeScaleConfig(),
                         y: {
                             type: 'linear',
                             display: true,
@@ -655,107 +492,13 @@
                     }]
                 },
                 options: {
-                    parsing: false,
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
                     scales: {
-                        x: createTimeScaleConfig(),
                         y: {
                             beginAtZero: true,
                             max: 100,
                             title: { display: true, text: '强度 (%)' }
-                        }
-                    }
-                }
-            });
-
-            const ctxCombined = document.getElementById('correlationChart').getContext('2d');
-            correlationChart = new Chart(ctxCombined, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: '温度 (°C)',
-                        data: [],
-                        borderColor: '#ff9800',
-                        backgroundColor: 'rgba(255, 152, 0, 0.15)',
-                        tension: 0.35,
-                        yAxisID: 'yTemp',
-                        fill: false
-                    }, {
-                        label: '湿度 (%)',
-                        data: [],
-                        borderColor: '#4caf50',
-                        backgroundColor: 'rgba(76, 175, 80, 0.12)',
-                        tension: 0.35,
-                        yAxisID: 'yPercent',
-                        fill: false
-                    }, {
-                        label: '一氧化碳 (ppm)',
-                        data: [],
-                        borderColor: '#f44336',
-                        backgroundColor: 'rgba(244, 67, 54, 0.12)',
-                        tension: 0.35,
-                        yAxisID: 'yGas',
-                        fill: false
-                    }, {
-                        label: '空气质量 (AQI)',
-                        data: [],
-                        borderColor: '#2196F3',
-                        backgroundColor: 'rgba(33, 150, 243, 0.12)',
-                        tension: 0.35,
-                        borderDash: [4, 4],
-                        yAxisID: 'yGas',
-                        fill: false
-                    }, {
-                        label: '声音强度 (%)',
-                        data: [],
-                        borderColor: '#9c27b0',
-                        backgroundColor: 'rgba(156, 39, 176, 0.12)',
-                        tension: 0.35,
-                        borderDash: [6, 6],
-                        yAxisID: 'yPercent',
-                        fill: false
-                    }]
-                },
-                options: {
-                    parsing: false,
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    },
-                    scales: {
-                        x: createTimeScaleConfig(),
-                        yTemp: {
-                            type: 'linear',
-                            position: 'left',
-                            title: { display: true, text: '温度 (°C)' }
-                        },
-                        yGas: {
-                            type: 'linear',
-                            position: 'left',
-                            offset: true,
-                            grid: { drawOnChartArea: false },
-                            title: { display: true, text: '气体指标 (ppm / AQI)' }
-                        },
-                        yPercent: {
-                            type: 'linear',
-                            position: 'right',
-                            grid: { drawOnChartArea: false },
-                            suggestedMin: 0,
-                            suggestedMax: 100,
-                            title: { display: true, text: '百分比 (%)' }
                         }
                     }
                 }
@@ -777,13 +520,7 @@
         // 获取历史数据
         async function fetchHistory() {
             try {
-                let url = `/api/history?limit=${historyLimit}`;
-
-                if (historyTimeFilter) {
-                    url += `&range_type=${historyTimeFilter.type}&range_value=${historyTimeFilter.value}`;
-                }
-
-                const response = await fetch(url);
+                const response = await fetch('/api/history?limit=50');
                 const data = await response.json();
                 return data;
             } catch (error) {
@@ -791,55 +528,12 @@
                 throw error;
             }
         }
-
-        function changeHistoryRange(value) {
-            const parsed = Number(value);
-            historyLimit = Number.isFinite(parsed) && parsed > 0 ? parsed : historyLimit;
-            loadHistory();
-        }
-
-        function changeHistoryTimeRange(value) {
-            if (!value || value === 'none') {
-                historyTimeFilter = null;
-            } else {
-                const parts = value.split(':');
-                if (parts.length === 2) {
-                    const amount = Number(parts[1]);
-                    if (Number.isFinite(amount) && amount > 0) {
-                        historyTimeFilter = {
-                            type: parts[0],
-                            value: amount
-                        };
-                    }
-                }
-            }
-
-            loadHistory();
-        }
         
         // 判断CO状态
         function getCOStatus(co) {
             if (co < 50) return { text: '安全', class: 'safe' };
             if (co < 200) return { text: '注意', class: 'warning' };
             return { text: '危险', class: 'danger' };
-        }
-
-        function getTemperatureStatus(temp) {
-            if (temp < 18) return { text: '偏低', class: 'warning' };
-            if (temp <= 28) return { text: '舒适', class: 'safe' };
-            return { text: '偏高', class: 'danger' };
-        }
-
-        function getHumidityStatus(humidity) {
-            if (humidity < 40) return { text: '偏干', class: 'warning' };
-            if (humidity <= 70) return { text: '适宜', class: 'safe' };
-            return { text: '偏湿', class: 'warning' };
-        }
-
-        function getSoundStatus(sound) {
-            if (sound < 35) return { text: '安静', class: 'safe' };
-            if (sound <= 70) return { text: '正常', class: 'warning' };
-            return { text: '嘈杂', class: 'danger' };
         }
         
         // 判断空气质量状态
@@ -851,45 +545,24 @@
         
         // 更新页面显示
         function updateDisplay(data) {
-            const temperature = toNumber(data.temperature);
-            const humidity = toNumber(data.humidity);
-            const co = toNumber(data.co);
-            const airQuality = toNumber(data.air_quality);
-            const sound = toNumber(data.sound);
-
-            document.getElementById('temperature').textContent = temperature.toFixed(1);
-            document.getElementById('humidity').textContent = humidity.toFixed(1);
-            document.getElementById('co').textContent = Math.round(co);
-            document.getElementById('airQuality').textContent = Math.round(airQuality);
-            document.getElementById('sound').textContent = Math.round(sound);
+            document.getElementById('temperature').textContent = data.temperature.toFixed(1);
+            document.getElementById('humidity').textContent = data.humidity.toFixed(1);
+            document.getElementById('co').textContent = Math.round(data.co);
+            document.getElementById('airQuality').textContent = Math.round(data.air_quality);
+            document.getElementById('sound').textContent = Math.round(data.sound);
             document.getElementById('lastUpdate').textContent = data.last_update || '--';
             
-            const temperatureStatus = getTemperatureStatus(temperature);
-            const temperatureStatusEl = document.getElementById('temperatureStatus');
-            temperatureStatusEl.textContent = temperatureStatus.text;
-            temperatureStatusEl.className = 'status-badge ' + temperatureStatus.class;
-
-            const humidityStatus = getHumidityStatus(humidity);
-            const humidityStatusEl = document.getElementById('humidityStatus');
-            humidityStatusEl.textContent = humidityStatus.text;
-            humidityStatusEl.className = 'status-badge ' + humidityStatus.class;
-
             // 更新CO状态
-            const coStatus = getCOStatus(co);
+            const coStatus = getCOStatus(data.co);
             const coStatusEl = document.getElementById('coStatus');
             coStatusEl.textContent = coStatus.text;
             coStatusEl.className = 'status-badge ' + coStatus.class;
             
             // 更新空气质量状态
-            const aqStatus = getAQStatus(airQuality);
+            const aqStatus = getAQStatus(data.air_quality);
             const aqStatusEl = document.getElementById('aqStatus');
             aqStatusEl.textContent = aqStatus.text;
             aqStatusEl.className = 'status-badge ' + aqStatus.class;
-
-            const soundStatus = getSoundStatus(sound);
-            const soundStatusEl = document.getElementById('soundStatus');
-            soundStatusEl.textContent = soundStatus.text;
-            soundStatusEl.className = 'status-badge ' + soundStatus.class;
             
             document.getElementById('connectionStatus').textContent = '已连接';
             document.getElementById('connectionStatus').className = 'status-value connected';
@@ -929,95 +602,36 @@
         
         // 更新图表
         function updateCharts(history) {
-            if (!history || !history.length) {
-                document.getElementById('dataCount').textContent = '0 条记录';
-                document.getElementById('dataRange').textContent = '--';
-                return;
-            }
-
-            const sortedHistory = history.slice().sort((a, b) => parseTimestamp(a) - parseTimestamp(b));
-            const timestamps = sortedHistory.map(item => parseTimestamp(item));
-
-            const temperaturePoints = [];
-            const humidityPoints = [];
-            const coPoints = [];
-            const aqPoints = [];
-            const soundPoints = [];
-            const validTimestamps = [];
-
-            sortedHistory.forEach((item, index) => {
-                const ts = timestamps[index];
-                if (!ts || Number.isNaN(ts.getTime())) {
-                    return;
-                }
-
-                validTimestamps.push(ts);
-                temperaturePoints.push({ x: ts, y: toNumber(item.temperature) });
-                humidityPoints.push({ x: ts, y: toNumber(item.humidity) });
-                coPoints.push({ x: ts, y: toNumber(item.co) });
-                aqPoints.push({ x: ts, y: toNumber(item.air_quality) });
-                soundPoints.push({ x: ts, y: toNumber(item.sound) });
-            });
-
-            document.getElementById('dataCount').textContent = `${sortedHistory.length} 条记录`;
-
-            if (validTimestamps.length) {
-                const rangeText = `${formatDateTime(validTimestamps[0])} ~ ${formatDateTime(validTimestamps[validTimestamps.length - 1])}`;
-                document.getElementById('dataRange').textContent = rangeText;
-            } else {
-                document.getElementById('dataRange').textContent = '--';
-            }
-
-            let xMin, xMax;
-            if (validTimestamps.length > 0) {
-                const minTime = validTimestamps[0].getTime();
-                const maxTime = validTimestamps[validTimestamps.length - 1].getTime();
-                const padding = Math.max((maxTime - minTime) * 0.05, 30000);
-                
-                xMin = minTime - padding;
-                xMax = maxTime + padding;
-            }
-
+            if (!history.length) return;
+            
+            const labels = history.map((_, index) => index);
+            const temperatures = history.map(d => d.temperature);
+            const humidities = history.map(d => d.humidity);
+            const coValues = history.map(d => d.co);
+            const aqValues = history.map(d => d.air_quality);
+            const soundValues = history.map(d => d.sound);
+            
+            // 更新温湿度图表
             if (tempHumChart) {
-                tempHumChart.data.datasets[0].data = temperaturePoints;
-                tempHumChart.data.datasets[1].data = humidityPoints;
-                if (xMin !== undefined) {
-                    tempHumChart.options.scales.x.min = xMin;
-                    tempHumChart.options.scales.x.max = xMax;
-                }
+                tempHumChart.data.labels = labels;
+                tempHumChart.data.datasets[0].data = temperatures;
+                tempHumChart.data.datasets[1].data = humidities;
                 tempHumChart.update();
             }
-
+            
+            // 更新气体图表
             if (gasChart) {
-                gasChart.data.datasets[0].data = coPoints;
-                gasChart.data.datasets[1].data = aqPoints;
-                if (xMin !== undefined) {
-                    gasChart.options.scales.x.min = xMin;
-                    gasChart.options.scales.x.max = xMax;
-                }
+                gasChart.data.labels = labels;
+                gasChart.data.datasets[0].data = coValues;
+                gasChart.data.datasets[1].data = aqValues;
                 gasChart.update();
             }
-
+            
+            // 更新声音图表
             if (soundChart) {
-                soundChart.data.datasets[0].data = soundPoints;
-                if (xMin !== undefined) {
-                    soundChart.options.scales.x.min = xMin;
-                    soundChart.options.scales.x.max = xMax;
-                }
+                soundChart.data.labels = labels;
+                soundChart.data.datasets[0].data = soundValues;
                 soundChart.update();
-            }
-
-            if (correlationChart) {
-                correlationChart.data.datasets[0].data = temperaturePoints;
-                correlationChart.data.datasets[1].data = humidityPoints;
-                correlationChart.data.datasets[2].data = coPoints;
-                correlationChart.data.datasets[3].data = aqPoints;
-                correlationChart.data.datasets[4].data = soundPoints;
-                if (xMin !== undefined) {
-                    correlationChart.options.scales.x.min = xMin;
-                    correlationChart.options.scales.x.max = xMax;
-                }
-                correlationChart.update();
             }
         }
         
@@ -1040,32 +654,18 @@
         
         // 页面加载时初始化
         window.addEventListener('load', function() {
-            const rangeSelect = document.getElementById('historyRange');
-            if (rangeSelect) {
-                rangeSelect.value = historyLimit.toString();
-            }
-
-            const timeRangeSelect = document.getElementById('historyTimeRange');
-            if (timeRangeSelect) {
-                timeRangeSelect.value = 'none';
-            }
-
             initCharts();
             refreshData();
             loadHistory();
             
             // 启动自动刷新
             autoRefreshInterval = setInterval(refreshData, 3000);
-            historyRefreshInterval = setInterval(loadHistory, 60000);
         });
         
         // 页面关闭时清理
         window.addEventListener('beforeunload', function() {
             if (autoRefreshInterval) {
                 clearInterval(autoRefreshInterval);
-            }
-            if (historyRefreshInterval) {
-                clearInterval(historyRefreshInterval);
             }
         });
     </script>
