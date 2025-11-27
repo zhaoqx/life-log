@@ -169,9 +169,21 @@ def preview_resume(student_id):
 
 @app.route('/preview/<int:student_id>/green')
 def preview_resume_green(student_id):
-    """预览简历（绿色模板 - 基于简历模板1.pdf）"""
+    """预览简历（绿色模板 - 旧版）"""
     student = Student.query.get_or_404(student_id)
     return render_template('preview_green.html', student=student)
+
+@app.route('/preview/<int:student_id>/template1')
+def preview_resume_template1(student_id):
+    """预览简历（简历模板1 - 优化整洁版）"""
+    student = Student.query.get_or_404(student_id)
+    return render_template('preview_template1.html', student=student, now=datetime.now())
+
+@app.route('/preview/<int:student_id>/template2')
+def preview_resume_template2(student_id):
+    """预览简历（模板2 - 清新绿色版）"""
+    student = Student.query.get_or_404(student_id)
+    return render_template('preview_template2.html', student=student)
 
 @app.route('/api/award/<int:student_id>', methods=['POST'])
 def add_award(student_id):
@@ -260,6 +272,15 @@ def export_word_green(student_id):
     output_path = export_to_word_green(student, BASE_DIR)
     return send_file(output_path, as_attachment=True, 
                      download_name=f'{student.name}_小升初简历_绿色.docx')
+
+@app.route('/export/word/<int:student_id>/template2')
+def export_word_template2(student_id):
+    """导出Word文档（模板2 - 清新绿色版）"""
+    from export import export_to_word_template2
+    student = Student.query.get_or_404(student_id)
+    output_path = export_to_word_template2(student, BASE_DIR)
+    return send_file(output_path, as_attachment=True, 
+                     download_name=f'{student.name}_小升初简历_模板2.docx')
 
 @app.route('/export/pdf/<int:student_id>')
 def export_pdf(student_id):

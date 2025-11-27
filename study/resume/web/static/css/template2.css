@@ -1,0 +1,428 @@
+/* 模板2 - 清新绿色简历模板 */
+
+:root {
+    --green-dark: #2E7D32;
+    --green-main: #43A047;
+    --green-light: #66BB6A;
+    --green-pale: #E8F5E9;
+    --green-bg: #F1F8E9;
+    --text-dark: #212121;
+    --text-gray: #616161;
+    --white: #FFFFFF;
+    --shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* 打印样式 */
+@media print {
+    .t2-toolbar { display: none !important; }
+    .t2-page { 
+        box-shadow: none !important; 
+        margin: 0 !important;
+        page-break-after: always;
+        page-break-inside: avoid;
+    }
+    body, .t2-wrapper { background: white !important; padding: 0 !important; }
+}
+
+/* 容器 */
+.t2-wrapper {
+    background: linear-gradient(135deg, #E3F2E1 0%, #C8E6C9 100%);
+    min-height: 100vh;
+    padding: 30px 20px;
+    font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+}
+
+/* 工具栏 */
+.t2-toolbar {
+    max-width: 900px;
+    margin: 0 auto 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.t2-toolbar .btn {
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-t2-primary {
+    background: linear-gradient(135deg, var(--green-main), var(--green-dark));
+    color: white;
+    box-shadow: 0 4px 15px rgba(67,160,71,0.4);
+}
+
+.btn-t2-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(67,160,71,0.5);
+}
+
+.btn-t2-outline {
+    background: white;
+    color: var(--green-dark);
+    border: 2px solid var(--green-main);
+}
+
+.btn-t2-outline:hover {
+    background: var(--green-pale);
+}
+
+/* 页面 */
+.t2-page {
+    max-width: 900px;
+    margin: 0 auto 30px;
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+/* ========== 封面 ========== */
+.t2-cover {
+    background: linear-gradient(135deg, var(--green-main) 0%, var(--green-dark) 100%);
+    padding: 80px 60px;
+    text-align: center;
+    color: white;
+    position: relative;
+}
+
+.t2-cover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='rgba(255,255,255,0.1)' stroke-width='1'/%3E%3C/svg%3E") repeat;
+    background-size: 60px;
+    opacity: 0.3;
+}
+
+.t2-cover-content {
+    position: relative;
+    z-index: 1;
+}
+
+.t2-cover-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    padding: 8px 30px;
+    border-radius: 30px;
+    font-size: 14px;
+    letter-spacing: 8px;
+    margin-bottom: 30px;
+}
+
+.t2-cover-photo {
+    width: 160px;
+    height: 200px;
+    margin: 0 auto 30px;
+    border: 5px solid rgba(255,255,255,0.8);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.t2-cover-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.t2-cover-name {
+    font-size: 42px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    letter-spacing: 10px;
+}
+
+.t2-cover-subtitle {
+    font-size: 18px;
+    opacity: 0.9;
+    margin-bottom: 8px;
+}
+
+.t2-cover-divider {
+    width: 80px;
+    height: 3px;
+    background: rgba(255,255,255,0.5);
+    margin: 20px auto;
+}
+
+/* ========== 内容区 ========== */
+.t2-content {
+    padding: 50px 60px;
+}
+
+/* 区块 */
+.t2-section {
+    margin-bottom: 45px;
+}
+
+.t2-section:last-child {
+    margin-bottom: 0;
+}
+
+.t2-section-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid var(--green-main);
+}
+
+.t2-section-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, var(--green-main), var(--green-light));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+}
+
+.t2-section-title h2 {
+    font-size: 22px;
+    color: var(--green-dark);
+    margin: 0;
+    font-weight: bold;
+}
+
+/* 基本信息网格 */
+.t2-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.t2-info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    background: var(--green-pale);
+    border-radius: 10px;
+    border-left: 4px solid var(--green-main);
+}
+
+.t2-info-label {
+    font-weight: 600;
+    color: var(--green-dark);
+    min-width: 70px;
+}
+
+.t2-info-value {
+    color: var(--text-dark);
+}
+
+/* 表格 */
+.t2-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.t2-table th {
+    background: var(--green-main);
+    color: white;
+    padding: 15px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.t2-table td {
+    padding: 15px;
+    text-align: center;
+    background: white;
+    border-bottom: 1px solid #eee;
+}
+
+.t2-table tr:last-child td {
+    border-bottom: none;
+}
+
+.t2-table tr:nth-child(even) td {
+    background: var(--green-pale);
+}
+
+/* 自我介绍 */
+.t2-intro-text {
+    font-size: 16px;
+    line-height: 2;
+    color: var(--text-dark);
+    text-indent: 2em;
+    text-align: justify;
+    padding: 25px;
+    background: var(--green-bg);
+    border-radius: 12px;
+    border-left: 5px solid var(--green-main);
+}
+
+/* 获奖列表 */
+.t2-awards-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.t2-award-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 18px 20px;
+    background: white;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-left: 4px solid var(--green-main);
+    transition: transform 0.2s;
+}
+
+.t2-award-item:hover {
+    transform: translateX(5px);
+}
+
+.t2-award-date {
+    background: var(--green-main);
+    color: white;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.t2-award-title {
+    flex: 1;
+    color: var(--text-dark);
+    font-size: 15px;
+}
+
+/* 证书网格 */
+.t2-certs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.t2-cert-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s;
+}
+
+.t2-cert-card:hover {
+    transform: translateY(-5px);
+}
+
+.t2-cert-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.t2-cert-name {
+    padding: 12px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-gray);
+    background: var(--green-pale);
+    font-weight: 500;
+}
+
+/* 寄语卡片 */
+.t2-message-card {
+    background: linear-gradient(135deg, var(--green-pale) 0%, white 100%);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(67,160,71,0.2);
+}
+
+.t2-message-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.t2-message-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--green-main);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+}
+
+.t2-message-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--green-dark);
+}
+
+.t2-message-content {
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--text-dark);
+    text-indent: 2em;
+}
+
+/* 封底 */
+.t2-footer {
+    background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-main) 100%);
+    padding: 60px;
+    text-align: center;
+    color: white;
+}
+
+.t2-footer-thanks {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    letter-spacing: 5px;
+}
+
+.t2-footer-sub {
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+/* 占位符 */
+.t2-placeholder {
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .t2-content { padding: 30px 25px; }
+    .t2-info-grid { grid-template-columns: 1fr; }
+    .t2-certs-grid { grid-template-columns: repeat(2, 1fr); }
+    .t2-cover { padding: 50px 30px; }
+    .t2-cover-name { font-size: 28px; letter-spacing: 5px; }
+}
+

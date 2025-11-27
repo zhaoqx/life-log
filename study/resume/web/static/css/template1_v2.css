@@ -1,0 +1,554 @@
+/* 简历模板1 v2 - 优化整洁版 */
+
+/* 字体 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+:root {
+    --bg-cream: #F5F5E8;
+    --bg-white: #FFFFFF;
+    --green-primary: #5B8C3E;
+    --green-light: #8BC34A;
+    --green-border: #A8D08D;
+    --green-pale: #E8F5E9;
+    --text-dark: #333333;
+    --text-gray: #666666;
+    --border-dashed: #7CB342;
+}
+
+/* 打印样式 */
+@media print {
+    .template1v2-toolbar { display: none !important; }
+    .template1v2-page { 
+        box-shadow: none !important; 
+        margin: 0 !important;
+        page-break-after: always;
+    }
+    body { background: white !important; }
+}
+
+/* 整体容器 */
+.template1v2-wrapper {
+    background: linear-gradient(135deg, #E8E8D8 0%, #D8D8C8 100%);
+    min-height: 100vh;
+    padding: 30px 20px;
+    font-family: 'Noto Serif SC', 'SimSun', 'KaiTi', serif;
+}
+
+/* 工具栏 */
+.template1v2-toolbar {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    max-width: 400px;
+}
+
+.template1v2-toolbar .btn {
+    padding: 10px 18px;
+    border-radius: 25px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+}
+
+.btn-green {
+    background: linear-gradient(135deg, #5B8C3E, #7CB342);
+    color: white;
+    border: none;
+}
+
+.btn-green:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(91,140,62,0.4);
+}
+
+.btn-outline {
+    background: white;
+    color: #5B8C3E;
+    border: 2px solid #5B8C3E;
+}
+
+.btn-outline:hover {
+    background: #5B8C3E;
+    color: white;
+}
+
+/* 页面通用 */
+.template1v2-page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto 30px;
+    background: var(--bg-cream);
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    overflow: hidden;
+}
+
+/* ===================== 封面 ===================== */
+.page-cover {
+    display: flex;
+    min-height: 297mm;
+}
+
+.cover-left {
+    width: 40%;
+    background-image: url('../images/template1/tree_bg.png');
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+
+.cover-right {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.cover-photo-area {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.cover-photo {
+    width: 130px;
+    height: 160px;
+    border: 3px dashed var(--border-dashed);
+    background: white;
+    padding: 5px;
+}
+
+.cover-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cover-stamp {
+    width: 65px;
+    height: 65px;
+    background: var(--green-primary);
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'KaiTi', 'STKaiti', serif;
+}
+
+.cover-info {
+    text-align: center;
+    position: relative;
+    padding: 20px 40px;
+}
+
+.cover-info::before,
+.cover-info::after {
+    content: '◆';
+    position: absolute;
+    color: var(--green-primary);
+    font-size: 10px;
+}
+
+.cover-info::before { top: 0; left: 0; }
+.cover-info::after { bottom: 0; right: 0; }
+
+.cover-name {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    letter-spacing: 8px;
+}
+
+.cover-divider {
+    width: 100%;
+    height: 1px;
+    background: repeating-linear-gradient(90deg, var(--border-dashed) 0, var(--border-dashed) 5px, transparent 5px, transparent 10px);
+    margin: 10px 0;
+}
+
+.cover-school, .cover-phone {
+    font-size: 15px;
+    color: var(--text-gray);
+    margin: 8px 0;
+}
+
+/* ===================== 内页通用 ===================== */
+.page-inner {
+    padding: 25px;
+    min-height: 297mm;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.page-frame {
+    border: 2px solid var(--green-border);
+    border-radius: 10px;
+    min-height: calc(297mm - 50px);
+    padding: 20px;
+    position: relative;
+}
+
+.page-title-bar {
+    position: absolute;
+    top: -1px;
+    left: 30px;
+    background: var(--green-primary);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px 30px 12px 20px;
+    clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+}
+
+.page-body {
+    padding-top: 50px;
+}
+
+/* 右下角树木装饰 */
+.corner-tree {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 100px;
+    height: 150px;
+    background-image: url('../images/template1/tree_bg.png');
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    opacity: 0.85;
+    pointer-events: none;
+}
+
+/* ===================== 个人简介页 ===================== */
+.profile-section {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 25px;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-item {
+    font-size: 15px;
+    color: var(--text-dark);
+    margin: 14px 0;
+    line-height: 1.5;
+}
+
+.profile-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    display: inline-block;
+    min-width: 80px;
+}
+
+.profile-photo {
+    width: 130px;
+    height: 160px;
+    border: 3px dashed var(--border-dashed);
+    background: white;
+    padding: 5px;
+    flex-shrink: 0;
+}
+
+.profile-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 表格样式 */
+.section-title {
+    font-size: 17px;
+    font-weight: bold;
+    color: var(--green-primary);
+    text-align: center;
+    margin: 25px 0 15px;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.data-table th {
+    background: var(--green-primary);
+    color: white;
+    padding: 12px 10px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.data-table td {
+    padding: 12px 10px;
+    text-align: center;
+    background: white;
+    border-bottom: 1px solid #eee;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* ===================== 自荐书页 ===================== */
+.letter-section {
+    font-size: 15px;
+    line-height: 2;
+    color: var(--text-dark);
+    padding: 10px 20px;
+}
+
+.letter-greeting {
+    margin-bottom: 20px;
+}
+
+.letter-para {
+    text-indent: 2em;
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.letter-closing {
+    text-align: right;
+    margin-top: 30px;
+    padding-right: 60px;
+}
+
+.letter-sign {
+    text-align: right;
+    margin-top: 40px;
+    padding-right: 60px;
+    line-height: 1.8;
+}
+
+/* ===================== 获奖经历页 ===================== */
+.awards-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.awards-list li {
+    font-size: 15px;
+    line-height: 2.4;
+    color: var(--text-dark);
+    padding-left: 15px;
+    position: relative;
+}
+
+.awards-list li::before {
+    content: '•';
+    color: var(--green-primary);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.award-date {
+    display: inline-block;
+    width: 110px;
+    font-weight: 600;
+    color: var(--green-primary);
+}
+
+/* ===================== 证书页 ===================== */
+.certs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 10px;
+}
+
+.cert-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.cert-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.cert-card .cert-name {
+    padding: 10px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-gray);
+    background: var(--green-pale);
+}
+
+/* ===================== 兴趣爱好页 ===================== */
+.hobbies-display {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.hobbies-text {
+    font-size: 18px;
+    color: var(--text-dark);
+    margin-bottom: 30px;
+    line-height: 2;
+}
+
+.hobbies-photos {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.hobby-photo {
+    width: 200px;
+    height: 150px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 3px solid var(--green-border);
+}
+
+.hobby-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===================== 生活照片页 ===================== */
+.life-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+
+.life-photo-item {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    border: 4px solid white;
+}
+
+.life-photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.life-photo-item.square {
+    border-radius: 15px;
+    aspect-ratio: 16/10;
+    grid-column: span 2;
+}
+
+/* ===================== 寄语页 ===================== */
+.message-section {
+    margin-bottom: 35px;
+}
+
+.message-title {
+    font-size: 17px;
+    font-weight: bold;
+    color: var(--green-primary);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--green-border);
+    margin-bottom: 15px;
+}
+
+.message-content {
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--text-dark);
+    text-indent: 2em;
+    text-align: justify;
+    background: rgba(255,255,255,0.6);
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid var(--green-primary);
+}
+
+/* ===================== 封底 ===================== */
+.page-back {
+    display: flex;
+    min-height: 297mm;
+    background: #8A8A8A;
+}
+
+.back-left {
+    width: 45%;
+    background-image: url('../images/template1/tree_back.png');
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+
+.back-right {
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.back-thanks {
+    font-size: 36px;
+    font-weight: bold;
+    color: white;
+    font-family: 'KaiTi', 'STKaiti', serif;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    letter-spacing: 5px;
+}
+
+.back-subtitle {
+    font-size: 16px;
+    color: rgba(255,255,255,0.8);
+    margin-top: 20px;
+    font-style: italic;
+}
+
+/* ===================== 占位符 ===================== */
+.placeholder-box {
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
+}
+
+/* ===================== 响应式 ===================== */
+@media screen and (max-width: 900px) {
+    .template1v2-page {
+        width: 100%;
+        min-height: auto;
+    }
+    .template1v2-toolbar {
+        position: static;
+        justify-content: center;
+        margin-bottom: 20px;
+        max-width: 100%;
+    }
+}
+

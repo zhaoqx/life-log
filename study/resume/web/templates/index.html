@@ -47,11 +47,11 @@
                 <a href="{{ url_for('edit_resume', student_id=student.id) }}" class="btn btn-secondary">
                     <i class="fas fa-edit"></i> 编辑
                 </a>
-                <a href="{{ url_for('preview_resume', student_id=student.id) }}" class="btn btn-primary" style="background: linear-gradient(to bottom, #8B4513, #5D3A1A);" title="棕色模板">
-                    <i class="fas fa-eye"></i>
+                <a href="{{ url_for('preview_resume_template2', student_id=student.id) }}" class="btn btn-primary" style="background: linear-gradient(135deg, #43A047, #2E7D32);" title="模板2（推荐）">
+                    <i class="fas fa-leaf"></i> 模板2
                 </a>
-                <a href="{{ url_for('preview_resume_green', student_id=student.id) }}" class="btn btn-primary" style="background: linear-gradient(to bottom, #009900, #006600);" title="绿色模板">
-                    <i class="fas fa-leaf"></i>
+                <a href="{{ url_for('preview_resume', student_id=student.id) }}" class="btn btn-secondary" title="棕色模板">
+                    <i class="fas fa-eye"></i>
                 </a>
                 <form action="{{ url_for('delete_resume', student_id=student.id) }}" method="POST" onsubmit="return confirm('确定要删除这份简历吗？');">
                     <button type="submit" class="btn btn-danger">

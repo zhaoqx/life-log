@@ -1,0 +1,350 @@
+{% extends "base.html" %}
+
+{% block title %}简历预览 - {{ student.name }} (简历模板1){% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/template1_v2.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- 工具栏 -->
+<div class="template1v2-toolbar">
+    <a href="{{ url_for('index') }}" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i> 返回
+    </a>
+    <a href="{{ url_for('edit_resume', student_id=student.id) }}" class="btn btn-green">
+        <i class="fas fa-edit"></i> 编辑
+    </a>
+    <button onclick="window.print()" class="btn btn-green">
+        <i class="fas fa-print"></i> 打印
+    </button>
+</div>
+
+<div class="template1v2-wrapper">
+    
+    <!-- ========== 第1页：封面 ========== -->
+    <div class="template1v2-page">
+        <div class="page-cover">
+            <div class="cover-left"></div>
+            <div class="cover-right">
+                <div class="cover-photo-area">
+                    <div class="cover-photo">
+                        {% if student.photo %}
+                        <img src="{{ url_for('static', filename=student.photo) }}" alt="照片">
+                        {% else %}
+                        <div class="placeholder-box" style="width:100%;height:100%;">照片</div>
+                        {% endif %}
+                    </div>
+                    <div class="cover-stamp">简</div>
+                </div>
+                <div class="cover-info">
+                    <div class="cover-name">{{ student.name }}</div>
+                    <div class="cover-divider"></div>
+                    <div class="cover-school">{{ student.school or '学校名称' }}</div>
+                    <div class="cover-phone">电话：{{ student.phone or '联系电话' }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== 第2页：个人简介 ========== -->
+    <div class="template1v2-page">
+        <div class="page-inner">
+            <div class="page-frame">
+                <div class="page-title-bar">个人简介</div>
+                <div class="page-body">
+                    <div class="profile-section">
+                        <div class="profile-info">
+                            <div class="profile-item"><span class="profile-label">姓　名：</span>{{ student.name }}</div>
+                            <div class="profile-item"><span class="profile-label">性　别：</span>{{ student.gender or '男' }}</div>
+                            <div class="profile-item"><span class="profile-label">出生年月：</span>{{ student.birth_date or '2012年' }}</div>
+                            <div class="profile-item"><span class="profile-label">毕业学校：</span>{{ student.school or '学校' }}</div>
+                            <div class="profile-item"><span class="profile-label">兴趣爱好：</span>{{ student.hobbies or '爱好' }}</div>
+                            <div class="profile-item"><span class="profile-label">家庭住址：</span>{{ student.address or student.district or '地址' }}</div>
+                            <div class="profile-item"><span class="profile-label">联系电话：</span>{{ student.phone or '电话' }}</div>
+                        </div>
+                        <div class="profile-photo">
+                            {% if student.photo %}
+                            <img src="{{ url_for('static', filename=student.photo) }}" alt="照片">
+                            {% else %}
+                            <div class="placeholder-box" style="width:100%;height:100%;">证件照</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="section-title">家庭成员</div>
+                    <table class="data-table">
+                        <tr>
+                            <th style="width:20%">家长</th>
+                            <th style="width:25%">姓名</th>
+                            <th style="width:35%">工作单位</th>
+                            <th style="width:20%">联系电话</th>
+                        </tr>
+                        <tr>
+                            <td>父亲</td>
+                            <td>赵先生</td>
+                            <td>工作单位</td>
+                            <td>{{ student.phone or '电话' }}</td>
+                        </tr>
+                        <tr>
+                            <td>母亲</td>
+                            <td>女士</td>
+                            <td>工作单位</td>
+                            <td>电话</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="section-title">五年级成绩单</div>
+                    <table class="data-table">
+                        <tr>
+                            <th>学期</th>
+                            <th>语文</th>
+                            <th>数学</th>
+                            <th>英语</th>
+                        </tr>
+                        <tr>
+                            <td>第一学期</td>
+                            <td>优</td>
+                            <td>优</td>
+                            <td>优</td>
+                        </tr>
+                        <tr>
+                            <td>第二学期</td>
+                            <td>优</td>
+                            <td>优</td>
+                            <td>优</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="corner-tree"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== 第3页：自荐书 ========== -->
+    <div class="template1v2-page">
+        <div class="page-inner">
+            <div class="page-frame">
+                <div class="page-title-bar">自荐书</div>
+                <div class="page-body">
+                    <div class="letter-section">
+                        <div class="letter-greeting">尊敬的老师：</div>
+                        <div class="letter-para">
+                            您好！我是{{ student.school or '学校' }}的{{ student.name }}，我非常有意愿就读贵校，希望您能给我这个机会，非常感谢！下面说说我的自荐情况：
+                        </div>
+                        {% if student.self_intro %}
+                        {% for para in student.self_intro.split('\n') %}
+                        {% if para.strip() %}
+                        <div class="letter-para">{{ para }}</div>
+                        {% endif %}
+                        {% endfor %}
+                        {% else %}
+                        <div class="letter-para">
+                            我是一个阳光、开朗、自信的学生，人际交往能力较强，有许多朋友，受到同学们的欢迎，同时也被老师寄予了很大的期望。
+                        </div>
+                        <div class="letter-para">
+                            我在校成绩优异，各科成绩名列前茅。我热爱学习，积极参加各种活动和比赛，并取得了理想的成绩。
+                        </div>
+                        <div class="letter-para">
+                            我是个努力的孩子。遇到任何困难、挫折，我都不会被打败，我会用自己的行动去战胜它们，坎坷只会让我更加勇往直前！
+                        </div>
+                        {% endif %}
+                        <div class="letter-closing">
+                            此致<br>敬礼
+                        </div>
+                        <div class="letter-sign">
+                            自荐人：{{ student.name }}<br>
+                            {{ student.school or '学校' }} {{ student.class_name or '' }}<br>
+                            {{ now.strftime('%Y年%m月%d日') if now else '日期' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="corner-tree"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== 第4页：获奖经历 ========== -->
+    <div class="template1v2-page">
+        <div class="page-inner">
+            <div class="page-frame">
+                <div class="page-title-bar">获奖经历</div>
+                <div class="page-body">
+                    <ul class="awards-list">
+                        {% if student.awards %}
+                        {% for award in student.awards %}
+                        <li>
+                            <span class="award-date">{{ award.date }}</span>
+                            {{ award.title }}
+                        </li>
+                        {% endfor %}
+                        {% else %}
+                        <li><span class="award-date">2020年</span>校级三好学生</li>
+                        <li><span class="award-date">2021年</span>区级优秀少先队员</li>
+                        <li><span class="award-date">2022年</span>英语朗读比赛二等奖</li>
+                        <li><span class="award-date">2023年</span>数学竞赛一等奖</li>
+                        <li><span class="award-date">2024年</span>校级三好学生</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="corner-tree"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== 第5页：获奖证书 ========== -->
+    <div class="template1v2-page">
+        <div class="page-inner">
+            <div class="page-frame">
+                <div class="page-title-bar">获奖证书</div>
+                <div class="page-body">
+                    <div class="certs-grid">
+                        {% if student.certificates %}
+                        {% for cert in student.certificates[:6] %}
+                        <div class="cert-card">
+                            <img src="{{ url_for('static', filename=cert.image_path) }}" alt="{{ cert.name }}">
+                            <div class="cert-name">{{ cert.name }}</div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        {% for i in range(4) %}
+                        <div class="cert-card">
+                            <div class="placeholder-box" style="height:150px;">证书 {{ i+1 }}</div>
+                            <div class="cert-name">证书名称</div>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="corner-tree"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 如果证书超过6张，添加更多页 -->
+    {% if student.certificates and student.certificates|length > 6 %}
+    <div class="template1v2-page">
+        <div class="page-inner">
+            <div class="page-frame">
+                <div class="page-title-bar">获奖证书（续）</div>
+                <div class="page-body">
+                    <div class="certs-grid">
+                        {% for cert in student.certificates[6:12] %}
+                        <div class="cert-card">
+                            <img src="{{ url_for('static', filename=cert.image_path) }}" alt="{{ cert.name }}">
+                            <div class="cert-name">{{ cert.name }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="corner-tree"></div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- ========== 第6页：兴趣爱好 ========== -->
+    <div class="template1v2-page">
+        <div class="page-inner">
+            <div class="page-frame">
+                <div class="page-title-bar">兴趣爱好</div>
+                <div class="page-body">
+                    <div class="hobbies-display">
+                        <div class="hobbies-text">
+                            我的兴趣爱好：{{ student.hobbies or '足球、滑冰、游泳、画画' }}
+                        </div>
+                        <div class="hobbies-photos">
+                            {% set activity_certs = [] %}
+                            {% if student.certificates %}
+                            {% for cert in student.certificates %}
+                            {% if cert.category == '活动照片' or '训练' in cert.name or '足球' in cert.name %}
+                            <div class="hobby-photo">
+                                <img src="{{ url_for('static', filename=cert.image_path) }}" alt="{{ cert.name }}">
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="corner-tree"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== 第7页：我的生活 ========== -->
+    <div class="template1v2-page">
+        <div class="page-inner">
+            <div class="page-frame">
+                <div class="page-title-bar">我的生活</div>
+                <div class="page-body">
+                    <div class="life-gallery">
+                        {% if student.photo %}
+                        <div class="life-photo-item">
+                            <img src="{{ url_for('static', filename=student.photo) }}" alt="生活照">
+                        </div>
+                        {% else %}
+                        <div class="life-photo-item placeholder-box">照片</div>
+                        {% endif %}
+                        
+                        {% if student.certificates and student.certificates|length > 0 %}
+                        <div class="life-photo-item">
+                            <img src="{{ url_for('static', filename=student.certificates[0].image_path) }}" alt="生活照">
+                        </div>
+                        {% else %}
+                        <div class="life-photo-item placeholder-box">照片</div>
+                        {% endif %}
+                        
+                        {% if student.certificates and student.certificates|length > 1 %}
+                        <div class="life-photo-item square">
+                            <img src="{{ url_for('static', filename=student.certificates[1].image_path) }}" alt="生活照">
+                        </div>
+                        {% else %}
+                        <div class="life-photo-item square placeholder-box">照片</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="corner-tree"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== 第8页：寄语 ========== -->
+    <div class="template1v2-page">
+        <div class="page-inner">
+            <div class="page-frame">
+                <div class="page-title-bar">寄 语</div>
+                <div class="page-body">
+                    <div class="message-section">
+                        <div class="message-title"><i class="fas fa-chalkboard-teacher"></i> 老师寄语</div>
+                        <div class="message-content">
+                            {{ student.teacher_comment or '你聪颖，你善良，你活泼。有时你也幻想，有时你也默然，在默然中沉思，在幻想中寻觅。小小的你会长大，小小的你会成熟，愿你更坚强！愿你更自信！你的天赋好比一朵火花，假如你用勤勉辛劳去助燃，它一定会变成熊熊烈火，放出无比的光和热来。' }}
+                        </div>
+                    </div>
+                    
+                    <div class="message-section">
+                        <div class="message-title"><i class="fas fa-heart"></i> 家长寄语</div>
+                        <div class="message-content">
+                            {{ student.parent_message or '孩子，相信自己，发挥自己的潜能，就是对自己的赏识。在学习的漫长路途中，还有无数次的考验等着你。现在初中生活只是刚刚开始，你已经迈好了开头的第一步，爸爸妈妈由衷地祝贺你！愿你生活与学习一帆风顺！一路阳光！' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="corner-tree"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== 第9页：封底 ========== -->
+    <div class="template1v2-page">
+        <div class="page-back">
+            <div class="back-left"></div>
+            <div class="back-right">
+                <div class="back-thanks">感谢您的阅读</div>
+                <div class="back-subtitle">Thank you for reading</div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}
+

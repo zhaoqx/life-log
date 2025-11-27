@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}简历预览 - {{ student.name }} (模板2){% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/template2.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- 工具栏 -->
+<div class="t2-toolbar">
+    <a href="{{ url_for('index') }}" class="btn btn-t2-outline">
+        <i class="fas fa-arrow-left"></i> 返回首页
+    </a>
+    <a href="{{ url_for('edit_resume', student_id=student.id) }}" class="btn btn-t2-primary">
+        <i class="fas fa-edit"></i> 编辑简历
+    </a>
+    <a href="{{ url_for('export_word_template2', student_id=student.id) }}" class="btn btn-t2-primary">
+        <i class="fas fa-file-word"></i> 导出Word
+    </a>
+    <button onclick="window.print()" class="btn btn-t2-primary">
+        <i class="fas fa-print"></i> 打印/PDF
+    </button>
+</div>
+
+<div class="t2-wrapper">
+    
+    <!-- 简历页面 -->
+    <div class="t2-page">
+        
+        <!-- 封面 -->
+        <div class="t2-cover">
+            <div class="t2-cover-content">
+                <div class="t2-cover-badge">小升初简历</div>
+                <div class="t2-cover-photo">
+                    {% if student.photo %}
+                    <img src="{{ url_for('static', filename=student.photo) }}" alt="照片">
+                    {% else %}
+                    <div class="t2-placeholder" style="width:100%;height:100%;">照片</div>
+                    {% endif %}
+                </div>
+                <div class="t2-cover-name">{{ student.name }}</div>
+                <div class="t2-cover-divider"></div>
+                <div class="t2-cover-subtitle">{{ student.school or '学校名称' }}</div>
+                <div class="t2-cover-subtitle">联系电话：{{ student.phone or '电话' }}</div>
+            </div>
+        </div>
+        
+        <!-- 内容区 -->
+        <div class="t2-content">
+            
+            <!-- 基本信息 -->
+            <div class="t2-section">
+                <div class="t2-section-title">
+                    <div class="t2-section-icon"><i class="fas fa-user"></i></div>
+                    <h2>基本信息</h2>
+                </div>
+                <div class="t2-info-grid">
+                    <div class="t2-info-item">
+                        <span class="t2-info-label">姓　名</span>
+                        <span class="t2-info-value">{{ student.name }}</span>
+                    </div>
+                    <div class="t2-info-item">
+                        <span class="t2-info-label">性　别</span>
+                        <span class="t2-info-value">{{ student.gender or '男' }}</span>
+                    </div>
+                    <div class="t2-info-item">
+                        <span class="t2-info-label">出生日期</span>
+                        <span class="t2-info-value">{{ student.birth_date or '2012年' }}</span>
+                    </div>
+                    <div class="t2-info-item">
+                        <span class="t2-info-label">身　高</span>
+                        <span class="t2-info-value">{{ student.height or '165cm' }}</span>
+                    </div>
+                    <div class="t2-info-item">
+                        <span class="t2-info-label">毕业学校</span>
+                        <span class="t2-info-value">{{ student.school or '学校' }}</span>
+                    </div>
+                    <div class="t2-info-item">
+                        <span class="t2-info-label">班　级</span>
+                        <span class="t2-info-value">{{ student.class_name or '班级' }}</span>
+                    </div>
+                    <div class="t2-info-item">
+                        <span class="t2-info-label">兴趣爱好</span>
+                        <span class="t2-info-value">{{ student.hobbies or '爱好' }}</span>
+                    </div>
+                    <div class="t2-info-item">
+                        <span class="t2-info-label">联系电话</span>
+                        <span class="t2-info-value">{{ student.phone or '电话' }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 成绩单 -->
+            <div class="t2-section">
+                <div class="t2-section-title">
+                    <div class="t2-section-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <h2>学业成绩</h2>
+                </div>
+                <table class="t2-table">
+                    <tr>
+                        <th>学期</th>
+                        <th>语文</th>
+                        <th>数学</th>
+                        <th>英语</th>
+                    </tr>
+                    <tr>
+                        <td>五年级上学期</td>
+                        <td>优</td>
+                        <td>优</td>
+                        <td>优</td>
+                    </tr>
+                    <tr>
+                        <td>五年级下学期</td>
+                        <td>优</td>
+                        <td>优</td>
+                        <td>优</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- 自我介绍 -->
+            <div class="t2-section">
+                <div class="t2-section-title">
+                    <div class="t2-section-icon"><i class="fas fa-pen"></i></div>
+                    <h2>自我介绍</h2>
+                </div>
+                <div class="t2-intro-text">
+                    {% if student.self_intro %}
+                    {{ student.self_intro | replace('\n', '<br>') | safe }}
+                    {% else %}
+                    我是一个阳光、开朗、自信的学生，热爱学习，积极参加各种活动和比赛。在校期间成绩优异，多次获得各类荣誉。我相信通过自己的努力，一定能在中学阶段取得更好的成绩！
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- 获奖经历 -->
+            <div class="t2-section">
+                <div class="t2-section-title">
+                    <div class="t2-section-icon"><i class="fas fa-trophy"></i></div>
+                    <h2>获奖经历</h2>
+                </div>
+                <ul class="t2-awards-list">
+                    {% if student.awards %}
+                    {% for award in student.awards %}
+                    <li class="t2-award-item">
+                        <span class="t2-award-date">{{ award.date }}</span>
+                        <span class="t2-award-title">{{ award.title }}</span>
+                    </li>
+                    {% endfor %}
+                    {% else %}
+                    <li class="t2-award-item">
+                        <span class="t2-award-date">2024年</span>
+                        <span class="t2-award-title">校级三好学生</span>
+                    </li>
+                    <li class="t2-award-item">
+                        <span class="t2-award-date">2023年</span>
+                        <span class="t2-award-title">区级优秀少先队员</span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            
+            <!-- 获奖证书 -->
+            {% if student.certificates %}
+            <div class="t2-section">
+                <div class="t2-section-title">
+                    <div class="t2-section-icon"><i class="fas fa-certificate"></i></div>
+                    <h2>获奖证书</h2>
+                </div>
+                <div class="t2-certs-grid">
+                    {% for cert in student.certificates %}
+                    <div class="t2-cert-card">
+                        <img src="{{ url_for('static', filename=cert.image_path) }}" alt="{{ cert.name }}">
+                        <div class="t2-cert-name">{{ cert.name }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- 寄语 -->
+            <div class="t2-section">
+                <div class="t2-section-title">
+                    <div class="t2-section-icon"><i class="fas fa-heart"></i></div>
+                    <h2>寄语</h2>
+                </div>
+                
+                {% if student.teacher_comment %}
+                <div class="t2-message-card">
+                    <div class="t2-message-header">
+                        <div class="t2-message-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <span class="t2-message-title">老师寄语</span>
+                    </div>
+                    <div class="t2-message-content">{{ student.teacher_comment }}</div>
+                </div>
+                {% endif %}
+                
+                <div class="t2-message-card">
+                    <div class="t2-message-header">
+                        <div class="t2-message-icon"><i class="fas fa-home"></i></div>
+                        <span class="t2-message-title">家长寄语</span>
+                    </div>
+                    <div class="t2-message-content">
+                        {{ student.parent_message or '孩子，相信自己，发挥自己的潜能。在学习的漫长路途中，愿你生活与学习一帆风顺！一路阳光！' }}
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- 封底 -->
+        <div class="t2-footer">
+            <div class="t2-footer-thanks">感谢您的阅读</div>
+            <div class="t2-footer-sub">Thank You For Reading</div>
+        </div>
+        
+    </div>
+    
+</div>
+{% endblock %}
+

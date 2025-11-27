@@ -545,6 +545,260 @@ def export_to_word_green(student, base_dir):
     return output_path
 
 
+def export_to_word_template2(student, base_dir):
+    """导出为Word文档（模板2 - 清新绿色版）"""
+    doc = Document()
+    
+    # 绿色主题
+    GREEN_MAIN = (67, 160, 71)  # #43A047
+    GREEN_DARK = (46, 125, 50)  # #2E7D32
+    
+    # 设置页面
+    for section in doc.sections:
+        section.top_margin = Cm(1.5)
+        section.bottom_margin = Cm(1.5)
+        section.left_margin = Cm(2.5)
+        section.right_margin = Cm(2.5)
+    
+    def add_t2_title(text, icon='◆'):
+        """添加绿色标题"""
+        para = doc.add_paragraph()
+        para.paragraph_format.space_before = Pt(20)
+        para.paragraph_format.space_after = Pt(12)
+        para.paragraph_format.border_bottom = True
+        run = para.add_run(f'{icon} {text}')
+        set_run_font(run, font_name='黑体', font_size=16, bold=True, color=GREEN_DARK)
+        return para
+    
+    # ========== 封面 ==========
+    para = doc.add_paragraph()
+    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    para.paragraph_format.space_before = Pt(60)
+    run = para.add_run('小升初简历')
+    set_run_font(run, font_size=14, color=(100, 100, 100))
+    
+    para = doc.add_paragraph()
+    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    para.paragraph_format.space_before = Pt(10)
+    run = para.add_run('─' * 30)
+    set_run_font(run, font_size=10, color=GREEN_MAIN)
+    
+    # 照片
+    if student.photo:
+        para = doc.add_paragraph()
+        para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        para.paragraph_format.space_before = Pt(30)
+        photo_path = base_dir / 'static' / student.photo
+        if photo_path.exists():
+            run = para.add_run()
+            run.add_picture(str(photo_path), width=Cm(4))
+    
+    # 姓名
+    para = doc.add_paragraph()
+    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    para.paragraph_format.space_before = Pt(30)
+    run = para.add_run(student.name or '姓名')
+    set_run_font(run, font_name='黑体', font_size=36, bold=True, color=GREEN_DARK)
+    
+    para = doc.add_paragraph()
+    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    para.paragraph_format.space_before = Pt(5)
+    run = para.add_run('─' * 15)
+    set_run_font(run, font_size=10, color=GREEN_MAIN)
+    
+    para = doc.add_paragraph()
+    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    para.paragraph_format.space_before = Pt(15)
+    run = para.add_run(student.school or '学校名称')
+    set_run_font(run, font_size=14, color=(80, 80, 80))
+    
+    para = doc.add_paragraph()
+    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    para.paragraph_format.space_before = Pt(8)
+    run = para.add_run(f'联系电话：{student.phone or "电话"}')
+    set_run_font(run, font_size=12, color=(100, 100, 100))
+    
+    doc.add_page_break()
+    
+    # ========== 基本信息 ==========
+    add_t2_title('基本信息', '👤')
+    
+    info_table = doc.add_table(rows=4, cols=4)
+    info_table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    
+    info_data = [
+        ('姓名', student.name or '', '性别', student.gender or '男'),
+        ('出生日期', student.birth_date or '', '身高', student.height or ''),
+        ('毕业学校', student.school or '', '班级', student.class_name or ''),
+        ('兴趣爱好', student.hobbies or '', '电话', student.phone or ''),
+    ]
+    
+    for i, (l1, v1, l2, v2) in enumerate(info_data):
+        row = info_table.rows[i]
+        for j, (label, value) in enumerate([(l1, v1), (l2, v2)]):
+            idx = j * 2
+            # 标签
+            cell = row.cells[idx]
+            cell.text = ''
+            para = cell.paragraphs[0]
+            run = para.add_run(label)
+            set_run_font(run, font_size=11, bold=True, color=GREEN_DARK)
+            set_cell_background(cell, 'E8F5E9')
+            cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
+            
+            # 值
+            cell = row.cells[idx + 1]
+            cell.text = ''
+            para = cell.paragraphs[0]
+            run = para.add_run(value)
+            set_run_font(run, font_size=11)
+            cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
+    
+    # ========== 成绩单 ==========
+    para = doc.add_paragraph()
+    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    para.paragraph_format.space_before = Pt(20)
+    run = para.add_run('学业成绩')
+    set_run_font(run, font_size=13, bold=True, color=GREEN_DARK)
+    
+    grade_table = doc.add_table(rows=3, cols=4)
+    grade_table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    grade_data = [
+        ('学期', '语文', '数学', '英语'),
+        ('五年级上', '优', '优', '优'),
+        ('五年级下', '优', '优', '优'),
+    ]
+    for i, row_data in enumerate(grade_data):
+        row = grade_table.rows[i]
+        for j, text in enumerate(row_data):
+            cell = row.cells[j]
+            cell.text = ''
+            para = cell.paragraphs[0]
+            para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            run = para.add_run(text)
+            if i == 0:
+                set_run_font(run, font_size=11, bold=True, color=(255, 255, 255))
+                set_cell_background(cell, '43A047')
+            else:
+                set_run_font(run, font_size=11)
+                if i % 2 == 0:
+                    set_cell_background(cell, 'E8F5E9')
+    
+    # ========== 自我介绍 ==========
+    add_t2_title('自我介绍', '✏')
+    
+    para = doc.add_paragraph()
+    para.paragraph_format.first_line_indent = Cm(0.75)
+    para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.ONE_POINT_FIVE
+    intro_text = student.self_intro or '我是一个阳光、开朗、自信的学生，热爱学习，积极参加各种活动和比赛。在校期间成绩优异，多次获得各类荣誉。我相信通过自己的努力，一定能在中学阶段取得更好的成绩！'
+    run = para.add_run(intro_text)
+    set_run_font(run, font_size=11)
+    
+    # ========== 获奖经历 ==========
+    if student.awards:
+        add_t2_title('获奖经历', '🏆')
+        
+        for award in sorted(student.awards, key=lambda x: x.order):
+            para = doc.add_paragraph()
+            para.paragraph_format.space_before = Pt(8)
+            para.paragraph_format.left_indent = Cm(0.5)
+            
+            # 日期标签
+            if award.date:
+                run = para.add_run(f'【{award.date}】')
+                set_run_font(run, font_size=10, bold=True, color=GREEN_MAIN)
+            
+            run = para.add_run(f'  {award.title}')
+            set_run_font(run, font_size=11)
+    
+    # ========== 证书照片 ==========
+    if student.certificates:
+        doc.add_page_break()
+        add_t2_title('获奖证书', '📜')
+        
+        certs = list(student.certificates)
+        for i in range(0, len(certs), 3):
+            table = doc.add_table(rows=2, cols=3)
+            table.alignment = WD_TABLE_ALIGNMENT.CENTER
+            
+            for j in range(3):
+                if i + j < len(certs):
+                    cert = certs[i + j]
+                    # 图片
+                    cell = table.cell(0, j)
+                    para = cell.paragraphs[0]
+                    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                    
+                    if cert.image_path:
+                        img_path = base_dir / 'static' / cert.image_path
+                        if img_path.exists():
+                            run = para.add_run()
+                            run.add_picture(str(img_path), width=Cm(5))
+                    
+                    # 名称
+                    cell = table.cell(1, j)
+                    para = cell.paragraphs[0]
+                    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                    run = para.add_run(cert.name)
+                    set_run_font(run, font_size=9, color=(100, 100, 100))
+            
+            doc.add_paragraph()
+    
+    # ========== 寄语 ==========
+    doc.add_page_break()
+    add_t2_title('寄语', '❤')
+    
+    if student.teacher_comment:
+        para = doc.add_paragraph()
+        para.paragraph_format.space_before = Pt(10)
+        run = para.add_run('【老师寄语】')
+        set_run_font(run, font_size=12, bold=True, color=GREEN_DARK)
+        
+        para = doc.add_paragraph()
+        para.paragraph_format.first_line_indent = Cm(0.75)
+        para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.ONE_POINT_FIVE
+        run = para.add_run(student.teacher_comment)
+        set_run_font(run, font_size=11)
+    
+    para = doc.add_paragraph()
+    para.paragraph_format.space_before = Pt(20)
+    run = para.add_run('【家长寄语】')
+    set_run_font(run, font_size=12, bold=True, color=GREEN_DARK)
+    
+    para = doc.add_paragraph()
+    para.paragraph_format.first_line_indent = Cm(0.75)
+    para.paragraph_format.line_spacing_rule = WD_LINE_SPACING.ONE_POINT_FIVE
+    parent_msg = student.parent_message or '孩子，相信自己，发挥自己的潜能。愿你生活与学习一帆风顺！一路阳光！'
+    run = para.add_run(parent_msg)
+    set_run_font(run, font_size=11)
+    
+    # ========== 感谢 ==========
+    para = doc.add_paragraph()
+    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    para.paragraph_format.space_before = Pt(60)
+    run = para.add_run('─' * 25)
+    set_run_font(run, font_size=10, color=GREEN_MAIN)
+    
+    para = doc.add_paragraph()
+    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    para.paragraph_format.space_before = Pt(20)
+    run = para.add_run('感谢您的阅读')
+    set_run_font(run, font_name='黑体', font_size=18, bold=True, color=GREEN_DARK)
+    
+    para = doc.add_paragraph()
+    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = para.add_run('Thank You For Reading')
+    set_run_font(run, font_size=11, color=(150, 150, 150))
+    
+    # 保存
+    output_dir = base_dir / 'static' / 'exports'
+    output_dir.mkdir(exist_ok=True)
+    output_path = output_dir / f'{student.name}_小升初简历_模板2.docx'
+    doc.save(output_path)
+    
+    return output_path
+
+
 def export_to_pdf(student, base_dir):
     """导出为PDF（先生成Word再转换）"""
     import subprocess

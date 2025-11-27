@@ -444,11 +444,14 @@
 </div>
 
 <div style="text-align: center; margin: 2rem 0;">
-    <a href="{{ url_for('preview_resume', student_id=student.id) }}" class="btn btn-primary" style="min-width: 180px; background: linear-gradient(to bottom, #8B4513, #5D3A1A);">
-        <i class="fas fa-eye"></i> 棕色模板预览
+    <a href="{{ url_for('preview_resume_template2', student_id=student.id) }}" class="btn btn-primary" style="min-width: 200px; background: linear-gradient(135deg, #43A047, #2E7D32);">
+        <i class="fas fa-leaf"></i> 模板2预览（推荐）
     </a>
-    <a href="{{ url_for('preview_resume_green', student_id=student.id) }}" class="btn btn-primary" style="min-width: 180px; margin-left: 1rem; background: linear-gradient(to bottom, #009900, #006600);">
-        <i class="fas fa-leaf"></i> 绿色模板预览
+    <a href="{{ url_for('export_word_template2', student_id=student.id) }}" class="btn btn-success" style="min-width: 150px; margin-left: 1rem;">
+        <i class="fas fa-file-word"></i> 导出Word
+    </a>
+    <a href="{{ url_for('preview_resume', student_id=student.id) }}" class="btn btn-secondary" style="min-width: 120px; margin-left: 1rem;">
+        <i class="fas fa-eye"></i> 棕色模板
     </a>
 </div>
 
