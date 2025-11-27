@@ -1,0 +1,473 @@
+/* 简历模板1 - 清新绿色植物风格 */
+
+:root {
+    --green-primary: #5B8C3E;
+    --green-dark: #4A7331;
+    --green-light: #7CB342;
+    --green-leaf: #8BC34A;
+    --cream-bg: #F8F6E8;
+    --cream-light: #FDFCF5;
+    --text-dark: #333333;
+    --text-gray: #666666;
+    --border-green: #5B8C3E;
+}
+
+/* 简历预览容器 */
+.resume-green {
+    max-width: 210mm;
+    margin: 0 auto;
+    font-family: 'Microsoft YaHei', '微软雅黑', sans-serif;
+    background: white;
+    box-shadow: 0 0 30px rgba(0,0,0,0.2);
+}
+
+/* 通用页面样式 */
+.green-page {
+    min-height: 297mm;
+    background: var(--cream-bg);
+    padding: 15mm;
+    position: relative;
+    page-break-after: always;
+    border: 3px dashed var(--green-primary);
+    box-sizing: border-box;
+}
+
+/* 树木装饰 - 使用SVG */
+.tree-decoration {
+    position: absolute;
+    bottom: 20mm;
+    right: 15mm;
+    width: 80px;
+    height: 120px;
+    opacity: 0.9;
+}
+
+.tree-decoration-left {
+    position: absolute;
+    left: 10mm;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100px;
+}
+
+/* 封面样式 */
+.green-cover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.green-cover .trees-left {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 800'%3E%3C!-- 最高的树 --%3E%3Cpath d='M45 800 L45 380' stroke='%234A3728' stroke-width='10' fill='none'/%3E%3Cg fill='%237CB342'%3E%3Cellipse cx='45' cy='340' rx='12' ry='22' transform='rotate(-35 45 340)'/%3E%3Cellipse cx='35' cy='310' rx='12' ry='22' transform='rotate(-55 35 310)'/%3E%3Cellipse cx='55' cy='310' rx='12' ry='22' transform='rotate(-15 55 310)'/%3E%3Cellipse cx='30' cy='280' rx='11' ry='20' transform='rotate(-60 30 280)'/%3E%3Cellipse cx='45' cy='275' rx='11' ry='20' transform='rotate(-35 45 275)'/%3E%3Cellipse cx='60' cy='280' rx='11' ry='20' transform='rotate(-10 60 280)'/%3E%3Cellipse cx='35' cy='250' rx='10' ry='18' transform='rotate(-50 35 250)'/%3E%3Cellipse cx='55' cy='250' rx='10' ry='18' transform='rotate(-20 55 250)'/%3E%3Cellipse cx='45' cy='225' rx='9' ry='16' transform='rotate(-35 45 225)'/%3E%3Cellipse cx='35' cy='200' rx='8' ry='14' transform='rotate(-45 35 200)'/%3E%3Cellipse cx='50' cy='195' rx='8' ry='14' transform='rotate(-25 50 195)'/%3E%3Cellipse cx='45' cy='170' rx='7' ry='12' transform='rotate(-35 45 170)'/%3E%3C/g%3E%3C!-- 中间的树 --%3E%3Cpath d='M100 800 L100 450' stroke='%234A3728' stroke-width='8' fill='none'/%3E%3Cg fill='%238BC34A'%3E%3Cellipse cx='100' cy='420' rx='10' ry='18' transform='rotate(-30 100 420)'/%3E%3Cellipse cx='90' cy='395' rx='10' ry='18' transform='rotate(-50 90 395)'/%3E%3Cellipse cx='110' cy='395' rx='10' ry='18' transform='rotate(-10 110 395)'/%3E%3Cellipse cx='85' cy='365' rx='9' ry='16' transform='rotate(-55 85 365)'/%3E%3Cellipse cx='100' cy='360' rx='9' ry='16' transform='rotate(-30 100 360)'/%3E%3Cellipse cx='115' cy='365' rx='9' ry='16' transform='rotate(-5 115 365)'/%3E%3Cellipse cx='90' cy='335' rx='8' ry='14' transform='rotate(-45 90 335)'/%3E%3Cellipse cx='110' cy='335' rx='8' ry='14' transform='rotate(-15 110 335)'/%3E%3Cellipse cx='100' cy='310' rx='7' ry='12' transform='rotate(-30 100 310)'/%3E%3C/g%3E%3C!-- 前面的小树 --%3E%3Cpath d='M70 800 L70 550' stroke='%234A3728' stroke-width='6' fill='none'/%3E%3Cg fill='%239CCC65'%3E%3Cellipse cx='70' cy='525' rx='9' ry='16' transform='rotate(-25 70 525)'/%3E%3Cellipse cx='60' cy='505' rx='9' ry='16' transform='rotate(-45 60 505)'/%3E%3Cellipse cx='80' cy='505' rx='9' ry='16' transform='rotate(-5 80 505)'/%3E%3Cellipse cx='55' cy='480' rx='8' ry='14' transform='rotate(-50 55 480)'/%3E%3Cellipse cx='70' cy='475' rx='8' ry='14' transform='rotate(-25 70 475)'/%3E%3Cellipse cx='85' cy='480' rx='8' ry='14' transform='rotate(0 85 480)'/%3E%3Cellipse cx='60' cy='455' rx='7' ry='12' transform='rotate(-40 60 455)'/%3E%3Cellipse cx='80' cy='455' rx='7' ry='12' transform='rotate(-10 80 455)'/%3E%3Cellipse cx='70' cy='435' rx='6' ry='10' transform='rotate(-25 70 435)'/%3E%3C/g%3E%3C!-- 最前面的树（底部） --%3E%3Cpath d='M55 800 L55 650' stroke='%234A3728' stroke-width='5' fill='none'/%3E%3Cg fill='%235B8C3E'%3E%3Cellipse cx='55' cy='630' rx='11' ry='20' transform='rotate(-20 55 630)'/%3E%3Cellipse cx='43' cy='605' rx='11' ry='20' transform='rotate(-45 43 605)'/%3E%3Cellipse cx='67' cy='605' rx='11' ry='20' transform='rotate(5 67 605)'/%3E%3Cellipse cx='40' cy='575' rx='10' ry='18' transform='rotate(-55 40 575)'/%3E%3Cellipse cx='55' cy='570' rx='10' ry='18' transform='rotate(-25 55 570)'/%3E%3Cellipse cx='70' cy='580' rx='10' ry='18' transform='rotate(10 70 580)'/%3E%3C/g%3E%3C/svg%3E") no-repeat left bottom;
+    background-size: auto 100%;
+}
+
+.green-cover .photo-frame {
+    width: 120px;
+    height: 150px;
+    border: 3px dashed var(--green-primary);
+    padding: 5px;
+    background: white;
+    margin-bottom: 20px;
+}
+
+.green-cover .photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.green-cover .title-icon {
+    font-size: 3rem;
+    color: var(--green-primary);
+    margin-bottom: 10px;
+}
+
+.green-cover .student-name {
+    font-size: 2rem;
+    color: var(--text-dark);
+    margin: 10px 0;
+    font-weight: normal;
+}
+
+.green-cover .student-info {
+    color: var(--text-gray);
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+.green-cover .info-divider {
+    width: 200px;
+    border-top: 2px dashed var(--green-primary);
+    margin: 15px auto;
+}
+
+.green-cover .info-diamond {
+    color: var(--green-primary);
+}
+
+/* 章节标题 */
+.green-section-title {
+    background: var(--green-primary);
+    color: white;
+    padding: 8px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 20px;
+    border-radius: 0;
+}
+
+/* 个人信息样式 */
+.green-info-section {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.green-info-left {
+    flex: 1;
+}
+
+.green-info-right {
+    width: 120px;
+}
+
+.green-info-item {
+    margin: 12px 0;
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+.green-info-item .label {
+    color: var(--text-dark);
+    font-weight: normal;
+}
+
+.green-info-right .photo-frame {
+    width: 120px;
+    height: 150px;
+    border: 3px dashed var(--green-primary);
+    padding: 5px;
+    background: white;
+}
+
+.green-info-right .photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 绿色表格 */
+.green-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+
+.green-table th {
+    background: var(--green-primary);
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    font-weight: normal;
+    border: 1px solid var(--green-primary);
+}
+
+.green-table td {
+    padding: 10px 15px;
+    text-align: center;
+    border: 1px solid var(--green-primary);
+    background: white;
+}
+
+.green-table-title {
+    text-align: center;
+    color: var(--green-primary);
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 20px 0 10px;
+}
+
+/* 自荐书样式 */
+.green-letter {
+    background: white;
+    padding: 30px;
+    line-height: 2;
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+.green-letter .greeting {
+    margin-bottom: 20px;
+}
+
+.green-letter .content {
+    text-indent: 2em;
+    margin-bottom: 15px;
+}
+
+.green-letter .signature {
+    text-align: right;
+    margin-top: 30px;
+}
+
+.green-letter .signature p {
+    margin: 5px 0;
+}
+
+/* 获奖经历 */
+.green-award-list {
+    background: white;
+    padding: 20px;
+}
+
+.green-award-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: flex-start;
+}
+
+.green-award-item:last-child {
+    border-bottom: none;
+}
+
+.green-award-date {
+    color: var(--green-primary);
+    font-weight: bold;
+    min-width: 80px;
+}
+
+.green-award-title {
+    flex: 1;
+    color: var(--text-dark);
+}
+
+/* 证书/照片展示 - 3x2网格 */
+.green-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.green-gallery.gallery-6 {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, auto);
+}
+
+.green-gallery-item {
+    text-align: center;
+    background: white;
+    padding: 8px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.green-gallery-item img {
+    max-width: 100%;
+    max-height: 160px;
+    object-fit: contain;
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+}
+
+.green-gallery-item .caption {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: var(--text-gray);
+}
+
+/* 兴趣爱好拼贴风格 */
+.green-collage {
+    position: relative;
+    min-height: 450px;
+    margin: 20px auto;
+    max-width: 500px;
+}
+
+.green-collage-item {
+    position: absolute;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border: 3px solid white;
+    overflow: hidden;
+}
+
+.green-collage-item:nth-child(1) {
+    top: 0;
+    left: 0;
+    width: 45%;
+    transform: rotate(-5deg);
+    z-index: 1;
+}
+
+.green-collage-item:nth-child(2) {
+    top: 20px;
+    right: 0;
+    width: 40%;
+    transform: rotate(3deg);
+    z-index: 2;
+}
+
+.green-collage-item:nth-child(3) {
+    top: 40%;
+    left: 25%;
+    width: 50%;
+    transform: rotate(-2deg);
+    z-index: 3;
+}
+
+.green-collage-item:nth-child(4) {
+    bottom: 0;
+    left: 5%;
+    width: 35%;
+    transform: rotate(4deg);
+    z-index: 4;
+}
+
+.green-collage-item:nth-child(5) {
+    bottom: 20px;
+    right: 10%;
+    width: 38%;
+    transform: rotate(-3deg);
+    z-index: 5;
+}
+
+.green-collage-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* 多图展示 (兴趣爱好等) */
+.green-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.green-photo-grid img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border: 2px solid var(--green-light);
+    border-radius: 4px;
+}
+
+/* 寄语样式 - 仿手绘边框 */
+.green-message-box {
+    background: white;
+    padding: 25px;
+    margin: 20px 0;
+    border: 2px solid var(--green-primary);
+    border-radius: 20px 0 20px 0;
+    position: relative;
+}
+
+.green-message-box::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 1px dashed var(--green-light);
+    border-radius: 15px 0 15px 0;
+    pointer-events: none;
+}
+
+.green-message-title {
+    color: var(--green-primary);
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.green-message-title::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--green-primary) 0,
+        var(--green-primary) 8px,
+        transparent 8px,
+        transparent 12px
+    );
+}
+
+.green-message-content {
+    line-height: 2;
+    color: var(--text-dark);
+    text-indent: 2em;
+    font-size: 1.05rem;
+}
+
+/* 树木SVG装饰 */
+.tree-svg {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+/* 页脚装饰 - 叶子形状的树 */
+.green-footer-trees {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    width: 120px;
+    height: 140px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 140'%3E%3C!-- 左树 --%3E%3Cpath d='M40 140 L40 95' stroke='%234A3728' stroke-width='4' fill='none'/%3E%3Cg fill='%237CB342'%3E%3Cellipse cx='40' cy='80' rx='8' ry='14' transform='rotate(-30 40 80)'/%3E%3Cellipse cx='35' cy='70' rx='8' ry='14' transform='rotate(-50 35 70)'/%3E%3Cellipse cx='45' cy='70' rx='8' ry='14' transform='rotate(-10 45 70)'/%3E%3Cellipse cx='32' cy='58' rx='7' ry='12' transform='rotate(-60 32 58)'/%3E%3Cellipse cx='40' cy='55' rx='7' ry='12' transform='rotate(-30 40 55)'/%3E%3Cellipse cx='48' cy='58' rx='7' ry='12' transform='rotate(0 48 58)'/%3E%3Cellipse cx='35' cy='45' rx='6' ry='10' transform='rotate(-45 35 45)'/%3E%3Cellipse cx='45' cy='45' rx='6' ry='10' transform='rotate(-15 45 45)'/%3E%3Cellipse cx='40' cy='35' rx='5' ry='9' transform='rotate(-30 40 35)'/%3E%3C/g%3E%3C!-- 右树 --%3E%3Cpath d='M85 140 L85 100' stroke='%234A3728' stroke-width='3' fill='none'/%3E%3Cg fill='%238BC34A'%3E%3Cellipse cx='85' cy='88' rx='7' ry='12' transform='rotate(-25 85 88)'/%3E%3Cellipse cx='80' cy='78' rx='7' ry='12' transform='rotate(-45 80 78)'/%3E%3Cellipse cx='90' cy='78' rx='7' ry='12' transform='rotate(-5 90 78)'/%3E%3Cellipse cx='77' cy='68' rx='6' ry='10' transform='rotate(-55 77 68)'/%3E%3Cellipse cx='85' cy='65' rx='6' ry='10' transform='rotate(-25 85 65)'/%3E%3Cellipse cx='93' cy='68' rx='6' ry='10' transform='rotate(5 93 68)'/%3E%3Cellipse cx='80' cy='55' rx='5' ry='9' transform='rotate(-40 80 55)'/%3E%3Cellipse cx='90' cy='55' rx='5' ry='9' transform='rotate(-10 90 55)'/%3E%3Cellipse cx='85' cy='45' rx='4' ry='8' transform='rotate(-25 85 45)'/%3E%3C/g%3E%3C/svg%3E") no-repeat;
+    background-size: contain;
+}
+
+/* 打印优化 */
+@media print {
+    .green-page {
+        page-break-after: always;
+        border: 2px dashed var(--green-primary);
+    }
+    
+    .toolbar {
+        display: none !important;
+    }
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .green-page {
+        padding: 10mm;
+        min-height: auto;
+    }
+    
+    .green-info-section {
+        flex-direction: column;
+    }
+    
+    .green-info-right {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .green-gallery {
+        grid-template-columns: 1fr;
+    }
+    
+    .green-photo-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

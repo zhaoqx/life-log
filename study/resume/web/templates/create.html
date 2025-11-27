@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}新建简历 - 小升初简历系统{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-user-plus"></i> 新建简历 - 基本信息
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('create_resume') }}" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> 姓名 <span style="color: red;">*</span></label>
+                        <input type="text" name="name" class="form-control" placeholder="请输入学生姓名" required>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label><i class="fas fa-venus-mars"></i> 性别</label>
+                                <select name="gender" class="form-control">
+                                    <option value="男">男</option>
+                                    <option value="女">女</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label><i class="fas fa-ruler-vertical"></i> 身高</label>
+                                <input type="text" name="height" class="form-control" placeholder="如：165cm">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-birthday-cake"></i> 出生年月</label>
+                        <input type="text" name="birth_date" class="form-control" placeholder="如：2013年12月">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-school"></i> 所在小学</label>
+                        <input type="text" name="school" class="form-control" placeholder="请输入学校名称">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-users"></i> 班级</label>
+                        <input type="text" name="class_name" class="form-control" placeholder="如：五(13)班">
+                    </div>
+                </div>
+                
+                <div class="col">
+                    <div class="form-group">
+                        <label><i class="fas fa-camera"></i> 证件照</label>
+                        <div class="photo-upload" onclick="document.getElementById('photo-input').click()">
+                            <img id="photo-preview" style="display: none;">
+                            <div class="placeholder" id="photo-placeholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                点击上传证件照
+                                <br><small>建议尺寸：120×150像素</small>
+                            </div>
+                        </div>
+                        <input type="file" id="photo-input" name="photo" accept="image/*" style="display: none;" onchange="previewPhoto(this)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> 户籍所在</label>
+                        <input type="text" name="district" class="form-control" placeholder="如：北京市西城区">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> 联系电话</label>
+                        <input type="text" name="phone" class="form-control" placeholder="请输入联系电话">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-home"></i> 家庭住址</label>
+                        <input type="text" name="address" class="form-control" placeholder="请输入家庭住址">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-heart"></i> 兴趣爱好</label>
+                <input type="text" name="hobbies" class="form-control" placeholder="如：围棋、足球、阅读、编程">
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary" style="min-width: 200px;">
+                    <i class="fas fa-arrow-right"></i> 下一步：添加荣誉与证书
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function previewPhoto(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('photo-preview').src = e.target.result;
+            document.getElementById('photo-preview').style.display = 'block';
+            document.getElementById('photo-placeholder').style.display = 'none';
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+{% endblock %}
+

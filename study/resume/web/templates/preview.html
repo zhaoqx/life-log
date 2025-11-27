@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}简历预览 - {{ student.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #666;
+    }
+    .container {
+        padding: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- 工具栏 -->
+<div class="toolbar">
+    <a href="{{ url_for('edit_resume', student_id=student.id) }}" class="btn btn-secondary">
+        <i class="fas fa-edit"></i> 编辑
+    </a>
+    <a href="{{ url_for('preview_resume_green', student_id=student.id) }}" class="btn btn-secondary" style="background: linear-gradient(to bottom, #009900, #006600); color: white;">
+        <i class="fas fa-leaf"></i> 绿色模板
+    </a>
+    <a href="{{ url_for('export_word', student_id=student.id) }}" class="btn btn-primary">
+        <i class="fas fa-file-word"></i> 导出Word
+    </a>
+    <a href="{{ url_for('export_pdf', student_id=student.id) }}" class="btn btn-success">
+        <i class="fas fa-file-pdf"></i> 导出PDF
+    </a>
+    <button onclick="window.print()" class="btn btn-secondary">
+        <i class="fas fa-print"></i> 打印
+    </button>
+</div>
+
+<div class="resume-preview">
+    <!-- 封面 -->
+    <div class="resume-cover">
+        <div class="resume-title">个 人 简 历</div>
+        <div class="resume-subtitle">PERSONAL RESUME</div>
+        <div class="resume-divider"></div>
+        
+        <div class="cover-info">
+            <div class="cover-info-item">
+                <span class="cover-info-label">姓　　名</span>
+                <span class="cover-info-value">{{ student.name or '——' }}</span>
+            </div>
+            <div class="cover-info-item">
+                <span class="cover-info-label">所在学校</span>
+                <span class="cover-info-value">{{ student.school or '——' }}</span>
+            </div>
+            <div class="cover-info-item">
+                <span class="cover-info-label">联系电话</span>
+                <span class="cover-info-value">{{ student.phone or '——' }}</span>
+            </div>
+            <div class="cover-info-item">
+                <span class="cover-info-label">投报学校</span>
+                <span class="cover-info-value">——</span>
+            </div>
+        </div>
+        
+        <div class="cover-date">{{ now().year }}年{{ now().month }}月</div>
+    </div>
+    
+    <!-- 基本信息页 -->
+    <div class="resume-page">
+        <h2 class="section-title">基本信息</h2>
+        
+        <table class="info-table">
+            <tr>
+                <td class="label">姓　　名</td>
+                <td>{{ student.name or '' }}</td>
+                <td class="label">性　　别</td>
+                <td>{{ student.gender or '' }}</td>
+                <td class="photo-cell" rowspan="5">
+                    {% if student.photo %}
+                    <img src="{{ url_for('static', filename=student.photo) }}" alt="照片">
+                    {% else %}
+                    <div style="width: 100px; height: 130px; background: var(--cream); display: flex; align-items: center; justify-content: center; border: 2px dashed var(--border-gold);">
+                        <i class="fas fa-user" style="font-size: 2rem; color: var(--border-gold);"></i>
+                    </div>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">出生日期</td>
+                <td>{{ student.birth_date or '' }}</td>
+                <td class="label">身　　高</td>
+                <td>{{ student.height or '' }}</td>
+            </tr>
+            <tr>
+                <td class="label">所在小学</td>
+                <td>{{ student.school or '' }}</td>
+                <td class="label">班　　级</td>
+                <td>{{ student.class_name or '' }}</td>
+            </tr>
+            <tr>
+                <td class="label">户籍所在</td>
+                <td>{{ student.district or '' }}</td>
+                <td class="label">民　　族</td>
+                <td>汉族</td>
+            </tr>
+            <tr>
+                <td class="label">联系电话</td>
+                <td>{{ student.phone or '' }}</td>
+                <td class="label">家庭住址</td>
+                <td>{{ student.address or '' }}</td>
+            </tr>
+        </table>
+        
+        {% if student.hobbies %}
+        <h2 class="section-title">兴趣爱好</h2>
+        <div class="text-content" style="text-indent: 0;">
+            {{ student.hobbies }}
+        </div>
+        {% endif %}
+        
+        {% if student.awards %}
+        <h2 class="section-title">荣誉奖励</h2>
+        
+        {% set categories = {} %}
+        {% for award in student.awards %}
+            {% set cat = award.category or '其他' %}
+            {% if cat not in categories %}
+                {% set _ = categories.update({cat: []}) %}
+            {% endif %}
+            {% set _ = categories[cat].append(award) %}
+        {% endfor %}
+        
+        {% for cat, awards in categories.items() %}
+        <div class="award-category">【{{ cat }}】</div>
+        {% for award in awards|sort(attribute='order') %}
+        <div class="award-item">
+            {% if award.date %}<span class="award-date">{{ award.date }}</span>{% endif %}
+            {{ award.title }}
+        </div>
+        {% if award.description %}
+        <div class="award-desc">{{ award.description }}</div>
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+        {% endif %}
+    </div>
+    
+    <!-- 自我介绍页 -->
+    {% if student.self_intro or student.parent_message or student.teacher_comment %}
+    <div class="resume-page">
+        {% if student.self_intro %}
+        <h2 class="section-title">自我介绍</h2>
+        <div class="text-content">
+            {{ student.self_intro|replace('\n', '<br>')|safe }}
+        </div>
+        {% endif %}
+        
+        {% if student.parent_message %}
+        <h2 class="section-title">家长寄语</h2>
+        <div class="text-content">
+            {{ student.parent_message|replace('\n', '<br>')|safe }}
+        </div>
+        {% endif %}
+        
+        {% if student.teacher_comment %}
+        <h2 class="section-title">老师评语</h2>
+        <div class="text-content">
+            {{ student.teacher_comment|replace('\n', '<br>')|safe }}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+    
+    <!-- 证书页 -->
+    {% if student.certificates %}
+    <div class="resume-page">
+        <h2 class="section-title">证书与荣誉</h2>
+        
+        <div class="certificate-grid">
+            {% for cert in student.certificates %}
+            <div class="certificate-item">
+                <img src="{{ url_for('static', filename=cert.image_path) }}" alt="{{ cert.name }}">
+                <div class="cert-name">{{ cert.name }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 添加now函数供模板使用
+</script>
+{% endblock %}
+

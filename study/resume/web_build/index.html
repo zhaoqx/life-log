@@ -1,0 +1,420 @@
+
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>简历 - 小升初</title>
+        
+    <style>
+        body {
+            background: #525659;
+            font-family: "Microsoft YaHei", "SimHei", sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .page {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 2.54cm 2cm; /* Word default margins approx */
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        @media print {
+            body { background: none; margin: 0; padding: 0; display: block; }
+            .page { width: 100%; box-shadow: none; margin: 0; padding: 2.54cm 2cm; page-break-after: always; height: auto; min-height: 0; }
+            .no-print { display: none !important; }
+        }
+        
+        /* Resume Header */
+        .resume-title {
+            text-align: center;
+            color: #0070c0; /* Blue standard */
+            font-size: 26pt;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+            letter-spacing: 5px;
+        }
+        .header-line {
+            border-top: 2px solid #ccc;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        /* Section Titles */
+        .section-title {
+            color: #0070c0;
+            font-size: 14pt;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .section-title::before {
+            content: "◆";
+            margin-right: 5px;
+            font-size: 12pt;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            border: 1px solid #000;
+        }
+        td, th {
+            border: 1px solid #000;
+            padding: 8px 5px;
+            font-size: 11pt;
+            vertical-align: middle;
+        }
+        
+        /* Info Table Specifics */
+        .info-label {
+            background-color: #e8f4fc; /* Light blue */
+            color: #0070c0;
+            font-weight: bold;
+            text-align: center;
+            width: 15%;
+        }
+        .info-value {
+            text-align: center;
+            width: 35%;
+        }
+        
+        /* Grade Table Specifics */
+        .grade-header {
+            background-color: #0070c0;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        .grade-term {
+            background-color: #e8f4fc;
+            text-align: center;
+        }
+        .grade-val {
+            text-align: center;
+        }
+        
+        /* Lists */
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 5px 0;
+        }
+        li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 5px;
+            font-size: 11pt;
+            line-height: 1.5;
+        }
+        li::before {
+            content: "◇";
+            position: absolute;
+            left: 0;
+            color: #000; /* Usually black bullet in this template, or blue? Let's stick to black/dark grey */
+        }
+        
+        /* Text Blocks */
+        .text-block {
+            font-size: 11pt;
+            line-height: 1.6;
+            text-indent: 2em;
+            text-align: justify;
+        }
+        
+        .parent-block {
+            color: #888;
+            font-style: italic;
+        }
+        
+        /* Photo Grid */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .photo-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        .photo-card img {
+            max-width: 100%;
+            height: 200px;
+            object-fit: contain;
+        }
+        .photo-name {
+            margin-top: 5px;
+            font-size: 10pt;
+            color: #555;
+        }
+        
+        /* Floating Controls */
+        .toolbar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        .btn {
+            background: #0070c0;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .btn:hover { background: #005294; }
+    </style>
+    
+    </head>
+    <body>
+        <div class="toolbar no-print">
+            <button class="btn" onclick="window.print()">打印 / 下载PDF</button>
+            <a href="data.json" target="_blank" class="btn" style="text-decoration:none;">查看源数据</a>
+        </div>
+
+        <!-- Page 1: Main Resume -->
+        <div class="page">
+            <div class="resume-title">【 个 人 简 历 】</div>
+            <div class="header-line"></div>
+            
+            <div class="section-title">基本信息</div>
+            <table>
+                <tr>
+                    <td class="info-label">姓 名</td>
+                    <td class="info-value"></td>
+                    <td class="info-label">性 别</td>
+                    <td class="info-value">男</td>
+                </tr>
+                <tr>
+                    <td class="info-label">出生日期</td>
+                    <td class="info-value"></td>
+                    <td class="info-label">身 高</td>
+                    <td class="info-value">1.65</td>
+                </tr>
+                <tr>
+                    <td class="info-label">所在小学</td>
+                    <td class="info-value">（请填写学校）</td>
+                    <td class="info-label">户籍所在</td>
+                    <td class="info-value">（请填写户籍）</td>
+                </tr>
+                <tr>
+                    <td class="info-label">联系电话</td>
+                    <td class="info-value">（请填写电话）</td>
+                    <td class="info-label">家庭住址</td>
+                    <td class="info-value">（请填写地址）</td>
+                </tr>
+            </table>
+            
+            <div class="section-title">学业成绩</div>
+            <table>
+                <tr class="grade-header">
+                    <td>学期</td>
+                    <td>语文</td>
+                    <td>数学</td>
+                    <td>英语</td>
+                </tr>
+                
+        <tr>
+            <td class="grade-term">五年级上学期</td>
+            <td class="grade-val">100</td>
+            <td class="grade-val">96</td>
+            <td class="grade-val">98</td>
+        </tr>
+        
+        <tr>
+            <td class="grade-term">五年级下学期</td>
+            <td class="grade-val">98</td>
+            <td class="grade-val">98</td>
+            <td class="grade-val">96</td>
+        </tr>
+        
+            </table>
+            
+            <div class="section-title">特长与证书</div>
+            <ul><li>围棋业余二段</li></ul>
+            
+            <div class="section-title">荣誉奖励</div>
+            <ul><li>（获奖经历）</li></ul>
+            
+            <div class="section-title">课外活动</div>
+            <ul><li>（活动经历）</li></ul>
+            
+            <div class="section-title">兴趣爱好</div>
+            <div class="text-block">围棋、足球、阅读、写作</div>
+            
+            <div class="section-title">自我介绍</div>
+            <div class="text-block">（自我介绍内容）</div>
+            
+            <div class="section-title">家长寄语</div>
+            <div class="text-block parent-block">（此处可由家长填写对孩子的评价和期望）</div>
+        </div>
+        
+        <!-- Page 2: Attachments -->
+        <div class="page">
+             <div class="resume-title" style="font-size:20pt;">【 证 书 与 风 采 】</div>
+             <div class="header-line"></div>
+             <div class="photo-grid">
+                
+        <div class="photo-card">
+            <img src="assets/KET成绩.jpg" alt="KET成绩">
+            <div class="photo-name">KET成绩</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/一年级一学期校优秀.jpg" alt="一年级一学期校优秀">
+            <div class="photo-name">一年级一学期校优秀</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/一年级二学期校优秀.jpg" alt="一年级二学期校优秀">
+            <div class="photo-name">一年级二学期校优秀</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/三年级二学期校优秀.jpg" alt="三年级二学期校优秀">
+            <div class="photo-name">三年级二学期校优秀</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/三年级校优秀中队干部.jpg" alt="三年级校优秀中队干部">
+            <div class="photo-name">三年级校优秀中队干部</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/三年级红领巾优秀奖章.jpg" alt="三年级红领巾优秀奖章">
+            <div class="photo-name">三年级红领巾优秀奖章</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/二年级一学期校优秀.jpg" alt="二年级一学期校优秀">
+            <div class="photo-name">二年级一学期校优秀</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/二年级二学期校优秀.jpg" alt="二年级二学期校优秀">
+            <div class="photo-name">二年级二学期校优秀</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/二年级校优秀中队干部.jpg" alt="二年级校优秀中队干部">
+            <div class="photo-name">二年级校优秀中队干部</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/区三好.jpg" alt="区三好">
+            <div class="photo-name">区三好</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/区三好学生.jpg" alt="区三好学生">
+            <div class="photo-name">区三好学生</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/华数之星三等奖.jpg" alt="华数之星三等奖">
+            <div class="photo-name">华数之星三等奖</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/四年级一学期校三好.jpg" alt="四年级一学期校三好">
+            <div class="photo-name">四年级一学期校三好</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/四年级二学期校三好.jpg" alt="四年级二学期校三好">
+            <div class="photo-name">四年级二学期校三好</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/围棋二段.jpg" alt="围棋二段">
+            <div class="photo-name">围棋二段</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/志愿者活动.jpg" alt="志愿者活动">
+            <div class="photo-name">志愿者活动</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/校足球队.jpg" alt="校足球队">
+            <div class="photo-name">校足球队</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/足球训练.jpg" alt="足球训练">
+            <div class="photo-name">足球训练</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/20241219_130016541_iOS_14.jpg" alt="20241219_130016541_iOS_14">
+            <div class="photo-name">20241219_130016541_iOS_14</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/20241219_130040157_iOS_13.jpg" alt="20241219_130040157_iOS_13">
+            <div class="photo-name">20241219_130040157_iOS_13</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/20241219_130056058_iOS_12.jpg" alt="20241219_130056058_iOS_12">
+            <div class="photo-name">20241219_130056058_iOS_12</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/20241219_130108098_iOS_11.jpg" alt="20241219_130108098_iOS_11">
+            <div class="photo-name">20241219_130108098_iOS_11</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/20241219_130125309_iOS_18.jpg" alt="20241219_130125309_iOS_18">
+            <div class="photo-name">20241219_130125309_iOS_18</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/20241219_130132995_iOS_16.jpg" alt="20241219_130132995_iOS_16">
+            <div class="photo-name">20241219_130132995_iOS_16</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/20241219_130143042_iOS_10.jpg" alt="20241219_130143042_iOS_10">
+            <div class="photo-name">20241219_130143042_iOS_10</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/20241219_130150677_iOS_9.jpg" alt="20241219_130150677_iOS_9">
+            <div class="photo-name">20241219_130150677_iOS_9</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/20241219_130158610_iOS_8.jpg" alt="20241219_130158610_iOS_8">
+            <div class="photo-name">20241219_130158610_iOS_8</div>
+        </div>
+        
+        <div class="photo-card">
+            <img src="assets/20241219_130210225_iOS_7.jpg" alt="20241219_130210225_iOS_7">
+            <div class="photo-name">20241219_130210225_iOS_7</div>
+        </div>
+        
+             </div>
+        </div>
+    </body>
+    </html>
+    

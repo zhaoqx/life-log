@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile.name }} - 简历</title>
+    <style>
+        :root {
+            --primary-green: #00B050;
+            --text-dark: #333;
+            --text-light: #666;
+            --bg-light: #f7fcf9;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: #525659; /* Dark bg for web view */
+            font-family: "Microsoft YaHei", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* A4 Page Wrapper */
+        .page {
+            background: white;
+            width: 210mm;
+            height: 297mm; /* Fixed height for A4 */
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            page-break-after: always;
+        }
+        
+        /* Shared Styles */
+        .section-title {
+            color: var(--primary-green);
+            font-size: 18pt;
+            font-weight: bold;
+            border-bottom: 2px solid var(--primary-green);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            margin-top: 40px;
+        }
+        
+        .content-padding {
+            padding: 40px 50px;
+        }
+        
+        /* ================= Page 1: Cover ================= */
+        .p1-container {
+            display: flex;
+            height: 100%;
+        }
+        
+        /* Sidebar with Tree Background */
+        .p1-sidebar {
+            width: 36%; /* Visual match */
+            height: 100%;
+            position: relative;
+            color: #333;
+        }
+        
+        .p1-bg-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: fill; /* Stretch to fill sidebar area exactly as in PDF */
+            z-index: 0;
+        }
+        
+        .p1-sidebar-content {
+            position: relative;
+            z-index: 1;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        
+        .avatar {
+            width: 120px;
+            height: 160px;
+            background: #eee;
+            border: 4px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            margin-top: 80px; /* Push down to fit in tree gap */
+            margin-bottom: 30px;
+            object-fit: cover;
+        }
+        
+        .info-block {
+            width: 100%;
+            padding-left: 20px;
+            font-size: 10pt;
+            line-height: 2;
+        }
+        .info-row {
+            display: flex;
+            align-items: center;
+        }
+        .info-icon {
+            width: 24px;
+            color: var(--primary-green);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .p1-main {
+            width: 64%;
+            padding: 60px 40px;
+            box-sizing: border-box;
+        }
+        
+        .main-name {
+            font-size: 36pt;
+            color: var(--primary-green);
+            font-weight: bold;
+            margin-bottom: 40px;
+            letter-spacing: 5px;
+        }
+        
+        .main-intro {
+            font-size: 11pt;
+            line-height: 1.8;
+            text-align: justify;
+            color: #444;
+        }
+
+        /* ================= Page 2: Table ================= */
+        .grade-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .grade-table th {
+            background: var(--primary-green);
+            color: white;
+            padding: 12px;
+            font-size: 12pt;
+        }
+        .grade-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            font-size: 11pt;
+        }
+        .grade-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        /* ================= Gallery Pages ================= */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .gallery-item {
+            text-align: center;
+            break-inside: avoid;
+        }
+        .gallery-img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 10px;
+        }
+        
+        /* ================= Back Cover ================= */
+        .back-cover-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media print {
+            body { background: none; }
+            .page { margin: 0; box-shadow: none; page-break-after: always; }
+            .toolbar { display: none; }
+            /* Ensure backgrounds print */
+            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar no-print">
+        <strong>用户:</strong>
+        <select onchange="location.href='?template={{ current_template }}&user='+this.value">
+            {% for u in available_users %}
+            <option value="{{ u }}" {% if u == current_user %}selected{% endif %}>
+                {{ u }}
+            </option>
+            {% endfor %}
+        </select>
+        
+        <strong>样式:</strong>
+        <select onchange="location.href='?user={{ current_user }}&template='+this.value">
+            <option value="template1" {% if current_template == 'template1' %}selected{% endif %}>样式一：经典蓝白</option>
+            <option value="simple" {% if current_template == 'simple' %}selected{% endif %}>样式二：简洁</option>
+            <option value="green" {% if current_template == 'green' %}selected{% endif %}>样式三：绿色现代 (PDF)</option>
+        </select>
+        <button onclick="window.print()">打印 PDF</button>
+    </div>
+
+    {% for page in green_template_structure %}
+    
+    <!-- Page {{ loop.index }}: {{ page.type }} -->
+    <div class="page">
+        
+        {% if page.type == 'cover' %}
+        <div class="p1-container">
+            <div class="p1-sidebar">
+                {% if page.bg_image %}
+                <img src="{{ page.bg_image }}" class="p1-bg-img">
+                {% endif %}
+                <div class="p1-sidebar-content">
+                    <img src="{{ profile.avatar }}" class="avatar" alt="Avatar">
+                    
+                    <div class="info-block">
+                        <div class="info-row"><span class="info-icon">♂</span> {{ profile.gender }}</div>
+                        <div class="info-row"><span class="info-icon">🎂</span> {{ profile.birthday }}</div>
+                        <div class="info-row"><span class="info-icon">📏</span> {{ profile.height }}</div>
+                        <div class="info-row"><span class="info-icon">📞</span> {{ profile.phone }}</div>
+                        <div class="info-row"><span class="info-icon">📍</span> {{ profile.hometown }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="p1-main">
+                <div class="main-name">{{ profile.name }}</div>
+                
+                <div class="section-title">自我介绍</div>
+                <div class="main-intro">
+                    {% for para in sections.intro %}
+                    <p>{{ para }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        {% elif page.type == 'table_page' %}
+        <div class="content-padding">
+            <div class="section-title">{{ page.title }}</div>
+            
+            <h3>学校信息</h3>
+            <p style="font-size: 12pt; margin-bottom: 30px;">
+                <strong>就读学校：</strong> {{ profile.school }}<br>
+                <strong>家庭住址：</strong> {{ profile.address }}
+            </p>
+            
+            <h3>学业成绩</h3>
+            <table class="grade-table">
+                <tr>
+                    <th>学期</th>
+                    <th>语文</th>
+                    <th>数学</th>
+                    <th>英语</th>
+                </tr>
+                {% for g in grades %}
+                <tr>
+                    <td>{{ g.term }}</td>
+                    <td>{{ g.chinese }}</td>
+                    <td>{{ g.math }}</td>
+                    <td>{{ g.english }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        
+        {% elif page.type == 'text_page' %}
+        <div class="content-padding">
+            <div class="section-title">{{ page.title }}</div>
+            <div class="main-intro" style="font-size: 12pt; padding-top: 20px;">
+                {% if page.content == 'intro' %}
+                    {% for para in sections.intro %}
+                    <p>{{ para }}</p>
+                    {% endfor %}
+                {% elif page.content == 'hobbies' %}
+                    <p>我的兴趣爱好包括：</p>
+                    <ul>
+                        <li>围棋（业余二段）</li>
+                        <li>足球（校队成员）</li>
+                        <li>阅读与写作</li>
+                    </ul>
+                {% elif page.content == 'comments' %}
+                     <p style="font-style: italic; color: #666;">{{ sections.parents_words[0] }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% elif page.type == 'list_page' %}
+        <div class="content-padding">
+            <div class="section-title">{{ page.title }}</div>
+            <ul style="font-size: 12pt; line-height: 2;">
+                {% for item in sections.awards %}
+                <li>{{ item }}</li>
+                {% endfor %}
+                {% for item in sections.specialty %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        {% elif page.type == 'gallery_page' or page.type == 'mixed_page' %}
+        <div class="content-padding">
+            <div class="section-title">{{ page.title }}</div>
+            
+            {% if page.type == 'mixed_page' %}
+            <ul style="font-size: 12pt; margin-bottom: 30px;">
+                {% for item in sections.activities %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            
+            <div class="gallery-grid">
+                {% for img in page.images %}
+                <div class="gallery-item">
+                    <img src="{{ img.path }}" class="gallery-img">
+                    <div>{{ img.name }}</div>
+                </div>
+                {% else %}
+                <div style="color:#999; grid-column: 1/-1; text-align: center;">（暂无图片）</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        {% elif page.type == 'back_cover' %}
+        <div style="width:100%; height:100%; position:relative; display:flex; align-items:center; justify-content:center;">
+            {% if page.bg_image %}
+            <img src="{{ page.bg_image }}" class="back-cover-bg">
+            {% endif %}
+            <div style="font-size: 24pt; color: var(--primary-green); font-weight: bold; z-index:1; margin-right: 40%;">
+                感谢您的阅读
+            </div>
+        </div>
+        
+        {% endif %}
+        
+    </div>
+    {% endfor %}
+</body>
+</html>

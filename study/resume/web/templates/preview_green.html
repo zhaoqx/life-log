@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block title %}简历预览 - {{ student.name }} (绿色模板){% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/template_green.css') }}">
+<style>
+    body { background: #555; }
+    .container { padding: 1rem; max-width: 100%; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- 工具栏 -->
+<div class="toolbar">
+    <a href="{{ url_for('edit_resume', student_id=student.id) }}" class="btn btn-secondary">
+        <i class="fas fa-edit"></i> 编辑
+    </a>
+    <a href="{{ url_for('preview_resume', student_id=student.id) }}" class="btn btn-secondary">
+        <i class="fas fa-palette"></i> 棕色模板
+    </a>
+    <a href="{{ url_for('export_word_green', student_id=student.id) }}" class="btn btn-primary">
+        <i class="fas fa-file-word"></i> 导出Word
+    </a>
+    <a href="{{ url_for('export_pdf', student_id=student.id) }}" class="btn btn-success">
+        <i class="fas fa-file-pdf"></i> 导出PDF
+    </a>
+    <button onclick="window.print()" class="btn btn-secondary">
+        <i class="fas fa-print"></i> 打印
+    </button>
+</div>
+
+<div class="resume-green">
+    <!-- 第1页：封面 -->
+    <div class="green-page green-cover">
+        <div class="trees-left"></div>
+        
+        <div class="photo-frame">
+            {% if student.photo %}
+            <img src="{{ url_for('static', filename=student.photo) }}" alt="照片">
+            {% else %}
+            <div style="width: 100%; height: 100%; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-user" style="font-size: 3rem; color: #ccc;"></i>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="title-icon">简</div>
+        
+        <div class="student-name">{{ student.name or '姓名' }}</div>
+        
+        <div class="info-divider"></div>
+        
+        <div class="student-info">
+            <span class="info-diamond">◆</span> {{ student.school or '学校名称' }}
+        </div>
+        <div class="student-info">
+            <span class="info-diamond">◆</span> 电话：{{ student.phone or '联系电话' }}
+        </div>
+        
+        <div class="green-footer-trees"></div>
+    </div>
+    
+    <!-- 第2页：个人简介 -->
+    <div class="green-page">
+        <div class="green-section-title">个人简介</div>
+        
+        <div class="green-info-section">
+            <div class="green-info-left">
+                <div class="green-info-item">
+                    <span class="label">姓名：</span>{{ student.name or '' }}
+                </div>
+                <div class="green-info-item">
+                    <span class="label">性别：</span>{{ student.gender or '' }}
+                </div>
+                <div class="green-info-item">
+                    <span class="label">出生年月：</span>{{ student.birth_date or '' }}
+                </div>
+                <div class="green-info-item">
+                    <span class="label">毕业学校：</span>{{ student.school or '' }}
+                </div>
+                <div class="green-info-item">
+                    <span class="label">兴趣爱好：</span>{{ student.hobbies or '' }}
+                </div>
+                <div class="green-info-item">
+                    <span class="label">家庭住址：</span>{{ student.address or student.district or '' }}
+                </div>
+                <div class="green-info-item">
+                    <span class="label">联系电话：</span>{{ student.phone or '' }}
+                </div>
+            </div>
+            <div class="green-info-right">
+                <div class="photo-frame">
+                    {% if student.photo %}
+                    <img src="{{ url_for('static', filename=student.photo) }}" alt="照片">
+                    {% else %}
+                    <div style="width: 100%; height: 100%; background: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-user" style="font-size: 2rem; color: #ccc;"></i>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="green-table-title">家庭成员</div>
+        <table class="green-table">
+            <tr>
+                <th>家长</th>
+                <th>姓名</th>
+                <th>工作单位</th>
+                <th>联系电话</th>
+            </tr>
+            <tr>
+                <td>父亲</td>
+                <td>——</td>
+                <td>——</td>
+                <td>——</td>
+            </tr>
+            <tr>
+                <td>母亲</td>
+                <td>——</td>
+                <td>——</td>
+                <td>——</td>
+            </tr>
+        </table>
+        
+        <div class="green-table-title">五年级成绩单</div>
+        <table class="green-table">
+            <tr>
+                <th>科目</th>
+                <th>语文</th>
+                <th>英语</th>
+                <th>数学</th>
+            </tr>
+            <tr>
+                <td>第一学期</td>
+                <td>优</td>
+                <td>优</td>
+                <td>优</td>
+            </tr>
+            <tr>
+                <td>第二学期</td>
+                <td>优</td>
+                <td>优</td>
+                <td>优</td>
+            </tr>
+        </table>
+        
+        <div class="green-footer-trees"></div>
+    </div>
+    
+    <!-- 第3页：自荐书 -->
+    <div class="green-page">
+        <div class="green-section-title">自荐书</div>
+        
+        <div class="green-letter">
+            <div class="greeting">尊敬的XX学校老师：</div>
+            
+            <div class="content">
+                您好，我是{{ student.school or 'XX小学' }}的{{ student.name or '学生' }}，我非常有意愿地就读贵校，希望您能使我梦想成真，非常感谢。下面说说我的自荐情况：
+            </div>
+            
+            {% if student.self_intro %}
+            <div class="content">
+                {{ student.self_intro|replace('\n', '</div><div class="content">')|safe }}
+            </div>
+            {% else %}
+            <div class="content">
+                我是一个阳光开朗、积极向上的学生，热爱学习，全面发展。在学业方面认真努力，成绩优异。我有很多爱好，比如围棋、足球、阅读等。我是个努力的孩子，遇到任何困难、挫折，我都不会被打败，我会用自己的行动去战胜它们！
+            </div>
+            {% endif %}
+            
+            <div class="signature">
+                <p>此致</p>
+                <p style="text-indent: 2em;">敬礼</p>
+                <p style="margin-top: 20px;">自荐人：{{ student.school or '' }} {{ student.class_name or '' }} {{ student.name or '' }}</p>
+                <p>{{ now().year }}年{{ now().month }}月</p>
+            </div>
+        </div>
+        
+        <div class="green-footer-trees"></div>
+    </div>
+    
+    <!-- 第4页：获奖经历 -->
+    {% if student.awards %}
+    <div class="green-page">
+        <div class="green-section-title">获奖经历</div>
+        
+        <div class="green-award-list">
+            {% for award in student.awards|sort(attribute='order') %}
+            <div class="green-award-item">
+                <span class="green-award-date">{{ award.date or '' }}</span>
+                <span class="green-award-title">{{ award.title }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="green-footer-trees"></div>
+    </div>
+    {% endif %}
+    
+    <!-- 第5页：获奖证书 -->
+    {% set cert_awards = student.certificates|selectattr('category', 'equalto', '证书')|list + student.certificates|selectattr('category', 'equalto', '奖状')|list %}
+    {% if cert_awards %}
+    <div class="green-page">
+        <div class="green-section-title">获奖证书</div>
+        
+        <div class="green-gallery gallery-6">
+            {% for cert in cert_awards[:6] %}
+            <div class="green-gallery-item">
+                <img src="{{ url_for('static', filename=cert.image_path) }}" alt="{{ cert.name }}">
+                <div class="caption">{{ cert.name }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="green-footer-trees"></div>
+    </div>
+    {% endif %}
+    
+    <!-- 第6页：兴趣爱好 -->
+    {% set activity_photos = student.certificates|selectattr('category', 'equalto', '活动照片')|list %}
+    <div class="green-page">
+        <div class="green-section-title">兴趣爱好</div>
+        
+        {% if activity_photos %}
+        <div class="green-collage">
+            {% for photo in activity_photos[:5] %}
+            <div class="green-collage-item">
+                <img src="{{ url_for('static', filename=photo.image_path) }}" alt="{{ photo.name }}">
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 40px; color: #666;">
+            <p style="font-size: 1.2rem; margin-bottom: 20px;">{{ student.hobbies or '围棋、足球、阅读、编程' }}</p>
+            <p style="color: #999;">（上传兴趣爱好照片后将在此展示拼贴效果）</p>
+        </div>
+        {% endif %}
+        
+        <div class="green-footer-trees"></div>
+    </div>
+    
+    <!-- 第7页：社会实践 -->
+    {% set practice_awards = student.awards|selectattr('category', 'equalto', '社会实践')|list %}
+    {% if practice_awards or activity_photos %}
+    <div class="green-page">
+        <div class="green-section-title">社会实践</div>
+        
+        {% for award in practice_awards %}
+        <div style="margin: 15px 0; padding: 15px; background: white;">
+            <h4 style="color: #5B8C3E; margin-bottom: 10px;">{{ award.title }}</h4>
+            <p style="color: #666;">{{ award.description or '积极参与社会实践活动' }}</p>
+        </div>
+        {% endfor %}
+        
+        {% if activity_photos %}
+        <div class="green-gallery" style="margin-top: 20px;">
+            {% for photo in activity_photos[:4] %}
+            <div class="green-gallery-item">
+                <img src="{{ url_for('static', filename=photo.image_path) }}" alt="{{ photo.name }}">
+                <div class="caption">{{ photo.name }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="green-footer-trees"></div>
+    </div>
+    {% endif %}
+    
+    <!-- 第8页：寄语 -->
+    <div class="green-page">
+        <div class="green-section-title">寄 语</div>
+        
+        <div class="green-message-box" style="margin-top: 30px;">
+            <div class="green-message-title">老师寄语</div>
+            <div class="green-message-content">
+                {% if student.teacher_comment %}
+                {{ student.teacher_comment }}
+                {% else %}
+                你聪颖，你善良，你活泼。有时你也幻想，有时你也默然，在默然中沉思，在幻想中寻觅。小小的你会长大，小小的你会成熟，愿你更坚强！愿你更自信！你的天赋好比一朵火花，假如你用勤勉辛劳去助燃，它一定会变成熊熊烈火，放出无比的光和热来。
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="green-message-box" style="margin-top: 40px;">
+            <div class="green-message-title">家长寄语</div>
+            <div class="green-message-content">
+                {% if student.parent_message %}
+                {{ student.parent_message }}
+                {% else %}
+                孩子，相信自己，发挥自己的潜能，就是对自己的赏识。在学习的漫长路途中，还有无数次的考验等着你。现在初中生活只是刚刚开始，你已经迈好了开头的第一步，爸爸妈妈由衷地祝贺你！愿你生活与学习一帆风顺！一路阳光！
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="green-footer-trees"></div>
+    </div>
+    
+    <!-- 第9页：封底 -->
+    <div class="green-page green-cover" style="justify-content: flex-end; padding-bottom: 100px;">
+        <div class="trees-left"></div>
+        
+        <div style="text-align: center; color: #666;">
+            <p style="font-size: 1.5rem; color: #5B8C3E; margin-bottom: 20px;">感谢您的阅读</p>
+            <p>{{ student.name }} · {{ student.school }}</p>
+            <p>{{ now().year }}年{{ now().month }}月</p>
+        </div>
+        
+        <div class="green-footer-trees"></div>
+    </div>
+</div>
+{% endblock %}

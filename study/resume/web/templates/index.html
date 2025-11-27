@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}小升初简历系统 - 首页{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2 style="color: var(--primary-brown); font-size: 1.8rem;">
+        <i class="fas fa-list"></i> 我的简历
+    </h2>
+    <a href="{{ url_for('create_resume') }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> 新建简历
+    </a>
+</div>
+
+{% if students %}
+<div class="resume-list">
+    {% for student in students %}
+    <div class="resume-item">
+        <div class="resume-item-header">
+            {% if student.photo %}
+            <img src="{{ url_for('static', filename=student.photo) }}" alt="照片" class="resume-item-photo">
+            {% else %}
+            <div class="resume-item-photo" style="background: var(--cream); display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-user" style="font-size: 1.5rem; color: var(--border-gold);"></i>
+            </div>
+            {% endif %}
+            <div>
+                <div class="resume-item-name">{{ student.name or '未命名' }}</div>
+                <div class="resume-item-school">{{ student.school or '未填写学校' }}</div>
+            </div>
+        </div>
+        <div class="resume-item-body">
+            <div class="resume-item-info">
+                <i class="fas fa-birthday-cake"></i> {{ student.birth_date or '未填写' }}
+            </div>
+            <div class="resume-item-info">
+                <i class="fas fa-map-marker-alt"></i> {{ student.district or '未填写' }}
+            </div>
+            <div class="resume-item-info">
+                <i class="fas fa-trophy"></i> {{ student.awards|length }} 项荣誉
+                <i class="fas fa-certificate" style="margin-left: 1rem;"></i> {{ student.certificates|length }} 张证书
+            </div>
+            <div class="resume-item-info" style="font-size: 0.8rem; color: #999;">
+                <i class="fas fa-clock"></i> 更新于 {{ student.updated_at.strftime('%Y-%m-%d %H:%M') if student.updated_at else '未知' }}
+            </div>
+            <div class="resume-item-actions">
+                <a href="{{ url_for('edit_resume', student_id=student.id) }}" class="btn btn-secondary">
+                    <i class="fas fa-edit"></i> 编辑
+                </a>
+                <a href="{{ url_for('preview_resume', student_id=student.id) }}" class="btn btn-primary" style="background: linear-gradient(to bottom, #8B4513, #5D3A1A);" title="棕色模板">
+                    <i class="fas fa-eye"></i>
+                </a>
+                <a href="{{ url_for('preview_resume_green', student_id=student.id) }}" class="btn btn-primary" style="background: linear-gradient(to bottom, #009900, #006600);" title="绿色模板">
+                    <i class="fas fa-leaf"></i>
+                </a>
+                <form action="{{ url_for('delete_resume', student_id=student.id) }}" method="POST" onsubmit="return confirm('确定要删除这份简历吗？');">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <i class="fas fa-file-alt"></i>
+    <h3>还没有简历</h3>
+    <p>点击上方"新建简历"按钮开始创建您的第一份小升初简历</p>
+    <a href="{{ url_for('create_resume') }}" class="btn btn-primary" style="margin-top: 1rem;">
+        <i class="fas fa-plus"></i> 新建简历
+    </a>
+</div>
+{% endif %}
+{% endblock %}
+

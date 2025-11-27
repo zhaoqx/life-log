@@ -1,0 +1,651 @@
+{
+  "users": {
+    "eric": {
+      "profile": {
+        "gender": "男",
+        "school": "（请填写学校）",
+        "phone": "（请填写电话）",
+        "address": "（请填写地址）",
+        "hometown": "（请填写户籍）",
+        "height": "1.65",
+        "avatar": "assets/KET成绩.jpg"
+      },
+      "sections": {
+        "specialty": [],
+        "awards": [],
+        "activities": [],
+        "intro": [],
+        "parents_words": [
+          "（此处可由家长填写对孩子的评价和期望）"
+        ]
+      },
+      "grades": [
+        {
+          "term": "五年级上学期",
+          "chinese": "100",
+          "math": "96",
+          "english": "98"
+        },
+        {
+          "term": "五年级下学期",
+          "chinese": "98",
+          "math": "98",
+          "english": "96"
+        }
+      ],
+      "attachments": [
+        {
+          "name": "KET成绩",
+          "path": "assets/KET成绩.jpg",
+          "type": "image"
+        },
+        {
+          "name": "一年级一学期校优秀",
+          "path": "assets/一年级一学期校优秀.jpg",
+          "type": "image"
+        },
+        {
+          "name": "一年级二学期校优秀",
+          "path": "assets/一年级二学期校优秀.jpg",
+          "type": "image"
+        },
+        {
+          "name": "三年级二学期校优秀",
+          "path": "assets/三年级二学期校优秀.jpg",
+          "type": "image"
+        },
+        {
+          "name": "三年级校优秀中队干部",
+          "path": "assets/三年级校优秀中队干部.jpg",
+          "type": "image"
+        },
+        {
+          "name": "三年级红领巾优秀奖章",
+          "path": "assets/三年级红领巾优秀奖章.jpg",
+          "type": "image"
+        },
+        {
+          "name": "二年级一学期校优秀",
+          "path": "assets/二年级一学期校优秀.jpg",
+          "type": "image"
+        },
+        {
+          "name": "二年级二学期校优秀",
+          "path": "assets/二年级二学期校优秀.jpg",
+          "type": "image"
+        },
+        {
+          "name": "二年级校优秀中队干部",
+          "path": "assets/二年级校优秀中队干部.jpg",
+          "type": "image"
+        },
+        {
+          "name": "区三好",
+          "path": "assets/区三好.jpg",
+          "type": "image"
+        },
+        {
+          "name": "区三好学生",
+          "path": "assets/区三好学生.jpg",
+          "type": "image"
+        },
+        {
+          "name": "华数之星三等奖",
+          "path": "assets/华数之星三等奖.jpg",
+          "type": "image"
+        },
+        {
+          "name": "四年级一学期校三好",
+          "path": "assets/四年级一学期校三好.jpg",
+          "type": "image"
+        },
+        {
+          "name": "四年级二学期校三好",
+          "path": "assets/四年级二学期校三好.jpg",
+          "type": "image"
+        },
+        {
+          "name": "围棋二段",
+          "path": "assets/围棋二段.jpg",
+          "type": "image"
+        },
+        {
+          "name": "志愿者活动",
+          "path": "assets/志愿者活动.jpg",
+          "type": "image"
+        },
+        {
+          "name": "校足球队",
+          "path": "assets/校足球队.jpg",
+          "type": "image"
+        },
+        {
+          "name": "足球训练",
+          "path": "assets/足球训练.jpg",
+          "type": "image"
+        },
+        {
+          "name": "20241219_130016541_iOS_14",
+          "path": "assets/20241219_130016541_iOS_14.jpg",
+          "type": "image"
+        },
+        {
+          "name": "20241219_130040157_iOS_13",
+          "path": "assets/20241219_130040157_iOS_13.jpg",
+          "type": "image"
+        },
+        {
+          "name": "20241219_130056058_iOS_12",
+          "path": "assets/20241219_130056058_iOS_12.jpg",
+          "type": "image"
+        },
+        {
+          "name": "20241219_130108098_iOS_11",
+          "path": "assets/20241219_130108098_iOS_11.jpg",
+          "type": "image"
+        },
+        {
+          "name": "20241219_130125309_iOS_18",
+          "path": "assets/20241219_130125309_iOS_18.jpg",
+          "type": "image"
+        },
+        {
+          "name": "20241219_130132995_iOS_16",
+          "path": "assets/20241219_130132995_iOS_16.jpg",
+          "type": "image"
+        },
+        {
+          "name": "20241219_130143042_iOS_10",
+          "path": "assets/20241219_130143042_iOS_10.jpg",
+          "type": "image"
+        },
+        {
+          "name": "20241219_130150677_iOS_9",
+          "path": "assets/20241219_130150677_iOS_9.jpg",
+          "type": "image"
+        },
+        {
+          "name": "20241219_130158610_iOS_8",
+          "path": "assets/20241219_130158610_iOS_8.jpg",
+          "type": "image"
+        },
+        {
+          "name": "20241219_130210225_iOS_7",
+          "path": "assets/20241219_130210225_iOS_7.jpg",
+          "type": "image"
+        }
+      ],
+      "green_template_structure": [
+        {
+          "type": "cover",
+          "bg_image": "assets/template_pdf/bg_page_1_0.png",
+          "sidebar_width": "35%",
+          "content": "profile_summary"
+        },
+        {
+          "type": "table_page",
+          "title": "基本信息与成绩",
+          "content": "grades_family"
+        },
+        {
+          "type": "text_page",
+          "title": "自荐信",
+          "content": "intro"
+        },
+        {
+          "type": "list_page",
+          "title": "获奖经历",
+          "content": "awards_list"
+        },
+        {
+          "type": "gallery_page",
+          "title": "获奖证书",
+          "content": "certificates",
+          "images": [
+            {
+              "name": "KET成绩",
+              "path": "assets/KET成绩.jpg",
+              "type": "image"
+            },
+            {
+              "name": "一年级一学期校优秀",
+              "path": "assets/一年级一学期校优秀.jpg",
+              "type": "image"
+            },
+            {
+              "name": "一年级二学期校优秀",
+              "path": "assets/一年级二学期校优秀.jpg",
+              "type": "image"
+            },
+            {
+              "name": "三年级二学期校优秀",
+              "path": "assets/三年级二学期校优秀.jpg",
+              "type": "image"
+            }
+          ]
+        },
+        {
+          "type": "text_page",
+          "title": "兴趣爱好",
+          "content": "hobbies"
+        },
+        {
+          "type": "mixed_page",
+          "title": "社会实践",
+          "content": "activities",
+          "images": [
+            {
+              "name": "三年级校优秀中队干部",
+              "path": "assets/三年级校优秀中队干部.jpg",
+              "type": "image"
+            },
+            {
+              "name": "三年级红领巾优秀奖章",
+              "path": "assets/三年级红领巾优秀奖章.jpg",
+              "type": "image"
+            }
+          ]
+        },
+        {
+          "type": "gallery_page",
+          "title": "我的生活",
+          "content": "life",
+          "images": [
+            {
+              "name": "二年级一学期校优秀",
+              "path": "assets/二年级一学期校优秀.jpg",
+              "type": "image"
+            },
+            {
+              "name": "二年级二学期校优秀",
+              "path": "assets/二年级二学期校优秀.jpg",
+              "type": "image"
+            },
+            {
+              "name": "二年级校优秀中队干部",
+              "path": "assets/二年级校优秀中队干部.jpg",
+              "type": "image"
+            },
+            {
+              "name": "区三好",
+              "path": "assets/区三好.jpg",
+              "type": "image"
+            },
+            {
+              "name": "区三好学生",
+              "path": "assets/区三好学生.jpg",
+              "type": "image"
+            },
+            {
+              "name": "华数之星三等奖",
+              "path": "assets/华数之星三等奖.jpg",
+              "type": "image"
+            },
+            {
+              "name": "四年级一学期校三好",
+              "path": "assets/四年级一学期校三好.jpg",
+              "type": "image"
+            },
+            {
+              "name": "四年级二学期校三好",
+              "path": "assets/四年级二学期校三好.jpg",
+              "type": "image"
+            },
+            {
+              "name": "围棋二段",
+              "path": "assets/围棋二段.jpg",
+              "type": "image"
+            },
+            {
+              "name": "志愿者活动",
+              "path": "assets/志愿者活动.jpg",
+              "type": "image"
+            },
+            {
+              "name": "校足球队",
+              "path": "assets/校足球队.jpg",
+              "type": "image"
+            },
+            {
+              "name": "足球训练",
+              "path": "assets/足球训练.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130016541_iOS_14",
+              "path": "assets/20241219_130016541_iOS_14.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130040157_iOS_13",
+              "path": "assets/20241219_130040157_iOS_13.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130056058_iOS_12",
+              "path": "assets/20241219_130056058_iOS_12.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130108098_iOS_11",
+              "path": "assets/20241219_130108098_iOS_11.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130125309_iOS_18",
+              "path": "assets/20241219_130125309_iOS_18.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130132995_iOS_16",
+              "path": "assets/20241219_130132995_iOS_16.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130143042_iOS_10",
+              "path": "assets/20241219_130143042_iOS_10.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130150677_iOS_9",
+              "path": "assets/20241219_130150677_iOS_9.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130158610_iOS_8",
+              "path": "assets/20241219_130158610_iOS_8.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130210225_iOS_7",
+              "path": "assets/20241219_130210225_iOS_7.jpg",
+              "type": "image"
+            }
+          ]
+        },
+        {
+          "type": "text_page",
+          "title": "寄语",
+          "content": "comments"
+        },
+        {
+          "type": "back_cover",
+          "bg_image": "assets/template_pdf/bg_page_10_0.png"
+        }
+      ]
+    },
+    "template_bot": {
+      "profile": {
+        "name": "张一一",
+        "gender": "女",
+        "birthday": "1999年",
+        "height": "160cm",
+        "school": "阳光小学",
+        "hometown": "北京",
+        "address": "北京市朝阳区示例小区",
+        "phone": "13812345678",
+        "avatar": "assets/template_pdf/bg_page_1_0.png"
+      },
+      "sections": {
+        "intro": [
+          "尊敬的Xx学校老师：",
+          "您好，我是阳光小学的张一一，我非常有意愿地就读你们学校，希望您能使我梦想成真，非常感谢，下面说说我的自荐情况：",
+          "我出生于1999年，于2006年进入Xx小学学习。在校期间，我学习成绩优异，多次获得三好学生荣誉称号。"
+        ],
+        "specialty": [
+          "书法（八级）",
+          "绘画（多次获奖）",
+          "摄影"
+        ],
+        "awards": [
+          "2008年 英语朗读比赛二等奖",
+          "2009年 全国小百花杯儿童书画摄影大赛三等奖",
+          "2010年 第十四届双龙杯全国少儿书画大赛优秀作品奖",
+          "2011年 英语朗读比赛一等奖"
+        ],
+        "activities": [
+          "校合唱团成员",
+          "班级宣传委员"
+        ],
+        "parents_words": [
+          "你聪明，你善良，你活泼。有时你也幻想，有时你也默然。在默然中沉思，在幻想中寻觅。小小的你会长大..."
+        ]
+      },
+      "grades": [
+        {
+          "term": "五年级上",
+          "chinese": "98",
+          "math": "100",
+          "english": "99"
+        },
+        {
+          "term": "五年级下",
+          "chinese": "99",
+          "math": "98",
+          "english": "100"
+        }
+      ],
+      "attachments": [],
+      "green_template_structure": [
+        {
+          "type": "cover",
+          "bg_image": "assets/template_pdf/bg_page_1_0.png",
+          "sidebar_width": "35%",
+          "content": "profile_summary"
+        },
+        {
+          "type": "table_page",
+          "title": "基本信息与成绩",
+          "content": "grades_family"
+        },
+        {
+          "type": "text_page",
+          "title": "自荐信",
+          "content": "intro"
+        },
+        {
+          "type": "list_page",
+          "title": "获奖经历",
+          "content": "awards_list"
+        },
+        {
+          "type": "gallery_page",
+          "title": "获奖证书",
+          "content": "certificates",
+          "images": [
+            {
+              "name": "KET成绩",
+              "path": "assets/KET成绩.jpg",
+              "type": "image"
+            },
+            {
+              "name": "一年级一学期校优秀",
+              "path": "assets/一年级一学期校优秀.jpg",
+              "type": "image"
+            },
+            {
+              "name": "一年级二学期校优秀",
+              "path": "assets/一年级二学期校优秀.jpg",
+              "type": "image"
+            },
+            {
+              "name": "三年级二学期校优秀",
+              "path": "assets/三年级二学期校优秀.jpg",
+              "type": "image"
+            }
+          ]
+        },
+        {
+          "type": "text_page",
+          "title": "兴趣爱好",
+          "content": "hobbies"
+        },
+        {
+          "type": "mixed_page",
+          "title": "社会实践",
+          "content": "activities",
+          "images": [
+            {
+              "name": "三年级校优秀中队干部",
+              "path": "assets/三年级校优秀中队干部.jpg",
+              "type": "image"
+            },
+            {
+              "name": "三年级红领巾优秀奖章",
+              "path": "assets/三年级红领巾优秀奖章.jpg",
+              "type": "image"
+            }
+          ]
+        },
+        {
+          "type": "gallery_page",
+          "title": "我的生活",
+          "content": "life",
+          "images": [
+            {
+              "name": "二年级一学期校优秀",
+              "path": "assets/二年级一学期校优秀.jpg",
+              "type": "image"
+            },
+            {
+              "name": "二年级二学期校优秀",
+              "path": "assets/二年级二学期校优秀.jpg",
+              "type": "image"
+            },
+            {
+              "name": "二年级校优秀中队干部",
+              "path": "assets/二年级校优秀中队干部.jpg",
+              "type": "image"
+            },
+            {
+              "name": "区三好",
+              "path": "assets/区三好.jpg",
+              "type": "image"
+            },
+            {
+              "name": "区三好学生",
+              "path": "assets/区三好学生.jpg",
+              "type": "image"
+            },
+            {
+              "name": "华数之星三等奖",
+              "path": "assets/华数之星三等奖.jpg",
+              "type": "image"
+            },
+            {
+              "name": "四年级一学期校三好",
+              "path": "assets/四年级一学期校三好.jpg",
+              "type": "image"
+            },
+            {
+              "name": "四年级二学期校三好",
+              "path": "assets/四年级二学期校三好.jpg",
+              "type": "image"
+            },
+            {
+              "name": "围棋二段",
+              "path": "assets/围棋二段.jpg",
+              "type": "image"
+            },
+            {
+              "name": "志愿者活动",
+              "path": "assets/志愿者活动.jpg",
+              "type": "image"
+            },
+            {
+              "name": "校足球队",
+              "path": "assets/校足球队.jpg",
+              "type": "image"
+            },
+            {
+              "name": "足球训练",
+              "path": "assets/足球训练.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130016541_iOS_14",
+              "path": "assets/20241219_130016541_iOS_14.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130040157_iOS_13",
+              "path": "assets/20241219_130040157_iOS_13.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130056058_iOS_12",
+              "path": "assets/20241219_130056058_iOS_12.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130108098_iOS_11",
+              "path": "assets/20241219_130108098_iOS_11.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130125309_iOS_18",
+              "path": "assets/20241219_130125309_iOS_18.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130132995_iOS_16",
+              "path": "assets/20241219_130132995_iOS_16.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130143042_iOS_10",
+              "path": "assets/20241219_130143042_iOS_10.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130150677_iOS_9",
+              "path": "assets/20241219_130150677_iOS_9.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130158610_iOS_8",
+              "path": "assets/20241219_130158610_iOS_8.jpg",
+              "type": "image"
+            },
+            {
+              "name": "20241219_130210225_iOS_7",
+              "path": "assets/20241219_130210225_iOS_7.jpg",
+              "type": "image"
+            }
+          ]
+        },
+        {
+          "type": "text_page",
+          "title": "寄语",
+          "content": "comments"
+        },
+        {
+          "type": "back_cover",
+          "bg_image": "assets/template_pdf/bg_page_10_0.png"
+        }
+      ]
+    }
+  },
+  "pdf_assets": [
+    {
+      "path": "assets/template_pdf/extracted_asset_0.png",
+      "bbox": [
+        0,
+        1.3200034999999843,
+        309.24000524999997,
+        841.92004
+      ],
+      "type": "background"
+    },
+    {
+      "path": "assets/template_pdf/extracted_asset_1.png",
+      "bbox": [
+        210.36000825,
+        231.83998100000008,
+        325.92000974999996,
+        376.91999450000003
+      ],
+      "type": "photo"
+    }
+  ]
+}

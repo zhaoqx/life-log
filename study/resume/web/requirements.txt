@@ -1,0 +1,8 @@
+# 小升初简历系统依赖
+flask>=2.0.0
+flask-sqlalchemy>=3.0.0
+python-docx>=0.8.11
+werkzeug>=2.0.0
+pywin32>=300  # Windows下Word/PDF转换
+docx2pdf>=0.1.8  # PDF转换备选方案
+
